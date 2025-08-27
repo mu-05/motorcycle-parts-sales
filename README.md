@@ -1,2 +1,2 @@
-# motorcycle-part-sales
+# motorcycle-parts-sales
 Analysis of a motorcycle parts dataset
