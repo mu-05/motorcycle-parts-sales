@@ -1,6 +1,87 @@
 ---
 title: "Motorcycle Parts Sales"
-author: "Murad M."
-format: html
+author: ""
+format: 
+  html:
+    number-sections: true
+    theme: cosmo
+    df-print: paged
+execute: 
+  echo: true
 ---
 
+# Introduction
+
+AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their sales data!
+
+They operate three warehouses, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.
+
+The board of directors wants to gain a better understanding of wholesale revenue by product line, and how it varies month-to-month and across warehouses.
+
+# Dataset
+
+The company provided access to their database, which contains the following table called `sales`.
+
+```{r}
+#| echo: false
+#| output: false
+# Load libraries
+library(DBI)
+library(RSQLite)
+library(readr)
+
+# Create SQLite connection
+con <- dbConnect(
+  drv = RSQLite::SQLite(), 
+  dbname = ":memory:")
+
+# Load CSV
+# .. means move up one level
+sales_data <- read_csv("../data/sales.csv")
+
+# Convert date column from POSIXct to character 
+sales_data$date <- as.Date(x = sales_data$date)
+sales_data$date <- format(sales_data$date, "%Y-%m-%d")
+
+# Write the sales data frame to the database
+dbWriteTable(
+  conn = con,
+  name = "sales",
+  value = sales_data
+)
+```
+
+``` sql
+-- Get 30 random rows
+SELECT *
+  FROM sales
+ ORDER BY RANDOM()
+ LIMIT 30;
+```
+
+```{r}
+#| echo: false
+# Get 30 random rows
+DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 30")
+```
+
+::: {.callout title="Click to see the column details" collapse="true"}
+| Column | Data type | Description |
+|------------------|-------------------------|-----------------------------|
+| `order_number` | `TEXT` | Unique order number. |
+| `date` | `TEXT` | Date of the order, from June to August 2021. |
+| `warehouse` | `TEXT` | The warehouse that the order was made from: `North`, `Central`, or `West`. |
+| `client_type` | `TEXT` | Whether the order was `Retail` or `Wholesale`. |
+| `product_line` | `TEXT` | Type of product ordered. |
+| `quantity` | `REAL` | Number of products ordered. |
+| `unit_price` | `REAL` | Price per product (euros). |
+| `total` | `REAL` | Total price of the order (euros). |
+| `payment` | `TEXT` | Payment method: `Credit card`, `Transfer`, or `Cash`. |
+| `payment_fee` | `REAL` | Percentage of `total` charged as a result of the `payment` method. |
+:::
+
+```{r}
+#| echo: false
+# Close the connection
+dbDisconnect(con)
+```

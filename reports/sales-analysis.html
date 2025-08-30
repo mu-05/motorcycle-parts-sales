@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Murad M.">
+<meta name="author" content="">
 
 <title>Motorcycle Parts Sales</title>
 <style>
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -33,7 +67,11 @@ ul.task-list li input[type="checkbox"] {
 <link href="sales-analysis_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="sales-analysis_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="sales-analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="sales-analysis_files/libs/bootstrap/bootstrap-32162a2fca7cb0439643f2faaab1edf3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="sales-analysis_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
+<script src="sales-analysis_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 
 </head>
@@ -53,12 +91,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Murad M. </p>
-          </div>
-  </div>
     
   
     
@@ -69,7 +101,111 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their sales data!</p>
+<p>They operate three warehouses, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
+<p>The board of directors wants to gain a better understanding of wholesale revenue by product line, and how it varies month-to-month and across warehouses.</p>
+</section>
+<section id="dataset" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Dataset</h1>
+<p>The company provided access to their database, which contains the following table called <code>sales</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 30 random rows</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">RANDOM</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a> <span class="kw">LIMIT</span> <span class="dv">30</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"N191","2":"2021-07-21","3":"North","4":"Retail","5":"Engine","6":"10","7":"55.39","8":"553.87","9":"Credit card","10":"0.03"},{"1":"N127","2":"2021-07-04","3":"North","4":"Retail","5":"Braking system","6":"10","7":"19.58","8":"195.75","9":"Cash","10":"0.00"},{"1":"N131","2":"2021-07-04","3":"North","4":"Retail","5":"Braking system","6":"5","7":"21.17","8":"105.85","9":"Credit card","10":"0.03"},{"1":"N56","2":"2021-06-17","3":"North","4":"Retail","5":"Miscellaneous","6":"10","7":"26.87","8":"268.68","9":"Cash","10":"0.00"},{"1":"C444","2":"2021-08-18","3":"Central","4":"Retail","5":"Braking system","6":"1","7":"13.94","8":"13.94","9":"Credit card","10":"0.03"},{"1":"N28","2":"2021-06-08","3":"North","4":"Retail","5":"Electrical system","6":"3","7":"29.93","8":"89.80","9":"Credit card","10":"0.03"},{"1":"N312","2":"2021-08-22","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"35.99","8":"143.96","9":"Credit card","10":"0.03"},{"1":"W129","2":"2021-08-01","3":"West","4":"Wholesale","5":"Electrical system","6":"32","7":"21.70","8":"694.40","9":"Transfer","10":"0.01"},{"1":"C473","2":"2021-08-27","3":"Central","4":"Wholesale","5":"Engine","6":"20","7":"60.22","8":"1204.30","9":"Transfer","10":"0.01"},{"1":"W176","2":"2021-08-27","3":"West","4":"Retail","5":"Electrical system","6":"4","7":"21.47","8":"85.89","9":"Credit card","10":"0.03"},{"1":"N2","2":"2021-06-01","3":"North","4":"Retail","5":"Suspension & traction","6":"8","7":"32.93","8":"263.45","9":"Credit card","10":"0.03"},{"1":"C38","2":"2021-06-09","3":"Central","4":"Retail","5":"Frame & body","6":"8","7":"35.31","8":"282.47","9":"Credit card","10":"0.03"},{"1":"N178","2":"2021-07-18","3":"North","4":"Retail","5":"Frame & body","6":"9","7":"49.68","8":"447.14","9":"Credit card","10":"0.03"},{"1":"W157","2":"2021-08-17","3":"West","4":"Retail","5":"Braking system","6":"10","7":"22.10","8":"221.05","9":"Credit card","10":"0.03"},{"1":"N228","2":"2021-08-02","3":"North","4":"Retail","5":"Engine","6":"3","7":"61.45","8":"184.36","9":"Credit card","10":"0.03"},{"1":"W90","2":"2021-07-11","3":"West","4":"Retail","5":"Electrical system","6":"2","7":"22.24","8":"44.49","9":"Credit card","10":"0.03"},{"1":"C14","2":"2021-06-04","3":"Central","4":"Retail","5":"Braking system","6":"4","7":"19.78","8":"79.14","9":"Credit card","10":"0.03"},{"1":"C237","2":"2021-07-13","3":"Central","4":"Wholesale","5":"Suspension & traction","6":"40","7":"35.06","8":"1402.53","9":"Transfer","10":"0.01"},{"1":"W86","2":"2021-07-10","3":"West","4":"Retail","5":"Engine","6":"10","7":"64.10","8":"641.02","9":"Credit card","10":"0.03"},{"1":"C322","2":"2021-07-30","3":"Central","4":"Wholesale","5":"Braking system","6":"28","7":"21.88","8":"612.78","9":"Transfer","10":"0.01"},{"1":"N40","2":"2021-06-12","3":"North","4":"Retail","5":"Braking system","6":"10","7":"13.24","8":"132.37","9":"Credit card","10":"0.03"},{"1":"C128","2":"2021-06-26","3":"Central","4":"Wholesale","5":"Electrical system","6":"36","7":"28.23","8":"1016.22","9":"Transfer","10":"0.01"},{"1":"N12","2":"2021-06-04","3":"North","4":"Retail","5":"Electrical system","6":"5","7":"20.16","8":"100.81","9":"Credit card","10":"0.03"},{"1":"N279","2":"2021-08-15","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"37.91","8":"151.65","9":"Credit card","10":"0.03"},{"1":"C180","2":"2021-07-05","3":"Central","4":"Retail","5":"Miscellaneous","6":"1","7":"24.63","8":"24.63","9":"Cash","10":"0.00"},{"1":"N230","2":"2021-08-02","3":"North","4":"Wholesale","5":"Engine","6":"40","7":"58.10","8":"2324.20","9":"Transfer","10":"0.01"},{"1":"N73","2":"2021-06-20","3":"North","4":"Retail","5":"Suspension & traction","6":"10","7":"37.06","8":"370.58","9":"Credit card","10":"0.03"},{"1":"N321","2":"2021-08-24","3":"North","4":"Wholesale","5":"Suspension & traction","6":"28","7":"37.03","8":"1036.93","9":"Transfer","10":"0.01"},{"1":"C463","2":"2021-08-24","3":"Central","4":"Retail","5":"Electrical system","6":"2","7":"23.95","8":"47.90","9":"Cash","10":"0.00"},{"1":"C139","2":"2021-06-27","3":"Central","4":"Retail","5":"Frame & body","6":"10","7":"35.73","8":"357.27","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-none no-icon callout-titled" title="Click to see the column details">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Click to see the column details
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Data type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>order_number</code></td>
+<td><code>TEXT</code></td>
+<td>Unique order number.</td>
+</tr>
+<tr class="even">
+<td><code>date</code></td>
+<td><code>TEXT</code></td>
+<td>Date of the order, from June to August 2021.</td>
+</tr>
+<tr class="odd">
+<td><code>warehouse</code></td>
+<td><code>TEXT</code></td>
+<td>The warehouse that the order was made from: <code>North</code>, <code>Central</code>, or <code>West</code>.</td>
+</tr>
+<tr class="even">
+<td><code>client_type</code></td>
+<td><code>TEXT</code></td>
+<td>Whether the order was <code>Retail</code> or <code>Wholesale</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>product_line</code></td>
+<td><code>TEXT</code></td>
+<td>Type of product ordered.</td>
+</tr>
+<tr class="even">
+<td><code>quantity</code></td>
+<td><code>REAL</code></td>
+<td>Number of products ordered.</td>
+</tr>
+<tr class="odd">
+<td><code>unit_price</code></td>
+<td><code>REAL</code></td>
+<td>Price per product (euros).</td>
+</tr>
+<tr class="even">
+<td><code>total</code></td>
+<td><code>REAL</code></td>
+<td>Total price of the order (euros).</td>
+</tr>
+<tr class="odd">
+<td><code>payment</code></td>
+<td><code>TEXT</code></td>
+<td>Payment method: <code>Credit card</code>, <code>Transfer</code>, or <code>Cash</code>.</td>
+</tr>
+<tr class="even">
+<td><code>payment_fee</code></td>
+<td><code>REAL</code></td>
+<td>Percentage of <code>total</code> charged as a result of the <code>payment</code> method.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
 
 </main>
 <!-- /main column -->
