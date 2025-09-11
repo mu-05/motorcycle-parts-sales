@@ -6,21 +6,24 @@ format:
     number-sections: true
     theme: cosmo
     df-print: paged
+    code-annotations: below
 execute: 
   echo: true
 ---
 
 # Introduction
 
-AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their sales data!
+AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their sales data.
 
 They operate three warehouses, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.
 
-The board of directors wants to gain a better understanding of wholesale revenue by product line, and how it varies month-to-month and across warehouses.
+The company's leadership team wants a better understanding of how much revenue is coming from wholesale sales. They're especially interested in seeing how this revenue changes from month to month and across different warehouses.
 
 # Dataset
 
-The company provided access to their database, which contains the following table called `sales`.
+To explore these questions, AliMoto provided access their database, specifically a table called `sales`, which  contains 1,000 records and 10 fields detailing various aspects of each transaction (date, price, client type).
+
+I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The dataset is clean and ready for analysis.
 
 ```{r}
 #| echo: false
@@ -29,6 +32,7 @@ The company provided access to their database, which contains the following tabl
 library(DBI)
 library(RSQLite)
 library(readr)
+library(tidyverse)
 
 # Create SQLite connection
 con <- dbConnect(
@@ -37,32 +41,32 @@ con <- dbConnect(
 
 # Load CSV
 # .. means move up one level
-sales_data <- read_csv("../data/sales.csv")
+sales <- read_csv("../data/sales.csv")
 
 # Convert date column from POSIXct to character 
-sales_data$date <- as.Date(x = sales_data$date)
-sales_data$date <- format(sales_data$date, "%Y-%m-%d")
+sales$date <- as.Date(x = sales$date)
+sales$date <- format(sales$date, "%Y-%m-%d")
 
 # Write the sales data frame to the database
 dbWriteTable(
   conn = con,
   name = "sales",
-  value = sales_data
+  value = sales
 )
 ```
 
 ``` sql
--- Get 30 random rows
+-- Get 10 random rows
 SELECT *
   FROM sales
  ORDER BY RANDOM()
- LIMIT 30;
+ LIMIT 10;
 ```
 
 ```{r}
 #| echo: false
-# Get 30 random rows
-DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 30")
+# Get 10 random rows
+DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 10")
 ```
 
 ::: {.callout title="Click to see the column details" collapse="true"}
@@ -79,6 +83,93 @@ DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 30")
 | `payment` | `TEXT` | Payment method: `Credit card`, `Transfer`, or `Cash`. |
 | `payment_fee` | `REAL` | Percentage of `total` charged as a result of the `payment` method. |
 :::
+
+# Wholesale Net Revenue
+
+How much revenue comes from business (wholesale) sales? To answer this first question, I wrote an SQL query using a `GROUP BY` clause, an aggregate function, and a subquery.
+
+The results (see @tbl-sales-summary) show that between June and August 2021, approximately **56%** of AliMoto Supplies' revenue came from sales to **business customers**, while the remaining 44% came from retail customers. 
+
+This 12 % difference, equivalent to **$33,883**, is likely due to the larger order sizes (see @fig-avg-quantity) placed by business customers. Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in higher total order values compared to individual retail customers.
+
+``` sql
+-- Get net revenue and revenue share for each client type
+SELECT client_type, 
+       SUM(total - ROUND(total * payment_fee, 2)) AS net_revenue, -- <1>
+       SUM(total - ROUND(total * payment_fee, 2)) / (             -- <2>
+          SELECT SUM(total - ROUND(total * payment_fee, 2))       -- <2>
+            FROM sales                                            -- <2>
+          ) AS revenue_share                                      -- <2>
+  FROM sales 
+ GROUP BY client_type;
+```
+1. Total revenue earned from each client type, after subtracting payment processing fees from each order.
+2. The percentage of total net revenue that comes from each client type.
+
+```{r}
+#| echo: false
+#| label: tbl-sales-summary
+#| tbl-cap: "Net revenue and revenue share for each client type"
+
+# Get sales summary
+sales_summary <- sales %>% 
+  group_by(client_type) %>%
+  summarize(
+    net_revenue = sum(total) - sum(total * payment_fee)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    revenue_share = net_revenue / sum(net_revenue)
+  )
+
+sales_summary_formatted <- sales_summary %>%
+  mutate(
+    net_revenue = scales::dollar(net_revenue),
+    revenue_share = scales::percent(revenue_share, accuracy = 0.1)
+  )
+
+sales_summary_formatted
+```
+
+```{r}
+#| label: fig-avg-quantity
+#| fig-cap: "Average quantity ordered by client type"
+#| fig-subcap: "Business customers order, on average, five times more parts than retail customers."
+#| echo: false
+# Set default theme
+theme_set(theme_bw(base_size = 16)) 
+
+# Calculate summary statistics
+client_type_averages <- sales %>%
+  group_by(client_type) %>%
+  summarize(
+    mean_quantity = mean(quantity),
+    mean_total = mean(total)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    mean_quantity = round(mean_quantity)
+  )
+
+# Plot: average quantity ordered by client type
+avg_quantity_plot <- ggplot(client_type_averages, aes(x = client_type, y = mean_quantity)) +
+  geom_col() +
+  labs(
+    title= "Average Quantity Ordered by Client Type",
+    x = "Type of Client",
+    y = "Average Quantity Ordered"
+  )
+
+avg_quantity_plot
+
+```
+
+Having determined that 55% of net revenue comes from business customers, the next step is to explore how this revenue evolves month-to-month and across different warehouse locations.
+
+# Revenue Growth across Warhouses 
+
+How this revenue changes from month to month and across different warehouses?
+
 
 ```{r}
 #| echo: false

@@ -103,23 +103,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their sales data!</p>
+<p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their sales data.</p>
 <p>They operate three warehouses, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
-<p>The board of directors wants to gain a better understanding of wholesale revenue by product line, and how it varies month-to-month and across warehouses.</p>
+<p>The company’s leadership team wants a better understanding of how much revenue is coming from wholesale sales. They’re especially interested in seeing how this revenue changes from month to month and across different warehouses.</p>
 </section>
 <section id="dataset" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Dataset</h1>
-<p>The company provided access to their database, which contains the following table called <code>sales</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 30 random rows</span></span>
+<p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code>, which contains 1,000 records and 10 fields detailing various aspects of each transaction (date, price, client type).</p>
+<p>I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The dataset is clean and ready for analysis.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">RANDOM</span>()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a> <span class="kw">LIMIT</span> <span class="dv">30</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a> <span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"N191","2":"2021-07-21","3":"North","4":"Retail","5":"Engine","6":"10","7":"55.39","8":"553.87","9":"Credit card","10":"0.03"},{"1":"N127","2":"2021-07-04","3":"North","4":"Retail","5":"Braking system","6":"10","7":"19.58","8":"195.75","9":"Cash","10":"0.00"},{"1":"N131","2":"2021-07-04","3":"North","4":"Retail","5":"Braking system","6":"5","7":"21.17","8":"105.85","9":"Credit card","10":"0.03"},{"1":"N56","2":"2021-06-17","3":"North","4":"Retail","5":"Miscellaneous","6":"10","7":"26.87","8":"268.68","9":"Cash","10":"0.00"},{"1":"C444","2":"2021-08-18","3":"Central","4":"Retail","5":"Braking system","6":"1","7":"13.94","8":"13.94","9":"Credit card","10":"0.03"},{"1":"N28","2":"2021-06-08","3":"North","4":"Retail","5":"Electrical system","6":"3","7":"29.93","8":"89.80","9":"Credit card","10":"0.03"},{"1":"N312","2":"2021-08-22","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"35.99","8":"143.96","9":"Credit card","10":"0.03"},{"1":"W129","2":"2021-08-01","3":"West","4":"Wholesale","5":"Electrical system","6":"32","7":"21.70","8":"694.40","9":"Transfer","10":"0.01"},{"1":"C473","2":"2021-08-27","3":"Central","4":"Wholesale","5":"Engine","6":"20","7":"60.22","8":"1204.30","9":"Transfer","10":"0.01"},{"1":"W176","2":"2021-08-27","3":"West","4":"Retail","5":"Electrical system","6":"4","7":"21.47","8":"85.89","9":"Credit card","10":"0.03"},{"1":"N2","2":"2021-06-01","3":"North","4":"Retail","5":"Suspension & traction","6":"8","7":"32.93","8":"263.45","9":"Credit card","10":"0.03"},{"1":"C38","2":"2021-06-09","3":"Central","4":"Retail","5":"Frame & body","6":"8","7":"35.31","8":"282.47","9":"Credit card","10":"0.03"},{"1":"N178","2":"2021-07-18","3":"North","4":"Retail","5":"Frame & body","6":"9","7":"49.68","8":"447.14","9":"Credit card","10":"0.03"},{"1":"W157","2":"2021-08-17","3":"West","4":"Retail","5":"Braking system","6":"10","7":"22.10","8":"221.05","9":"Credit card","10":"0.03"},{"1":"N228","2":"2021-08-02","3":"North","4":"Retail","5":"Engine","6":"3","7":"61.45","8":"184.36","9":"Credit card","10":"0.03"},{"1":"W90","2":"2021-07-11","3":"West","4":"Retail","5":"Electrical system","6":"2","7":"22.24","8":"44.49","9":"Credit card","10":"0.03"},{"1":"C14","2":"2021-06-04","3":"Central","4":"Retail","5":"Braking system","6":"4","7":"19.78","8":"79.14","9":"Credit card","10":"0.03"},{"1":"C237","2":"2021-07-13","3":"Central","4":"Wholesale","5":"Suspension & traction","6":"40","7":"35.06","8":"1402.53","9":"Transfer","10":"0.01"},{"1":"W86","2":"2021-07-10","3":"West","4":"Retail","5":"Engine","6":"10","7":"64.10","8":"641.02","9":"Credit card","10":"0.03"},{"1":"C322","2":"2021-07-30","3":"Central","4":"Wholesale","5":"Braking system","6":"28","7":"21.88","8":"612.78","9":"Transfer","10":"0.01"},{"1":"N40","2":"2021-06-12","3":"North","4":"Retail","5":"Braking system","6":"10","7":"13.24","8":"132.37","9":"Credit card","10":"0.03"},{"1":"C128","2":"2021-06-26","3":"Central","4":"Wholesale","5":"Electrical system","6":"36","7":"28.23","8":"1016.22","9":"Transfer","10":"0.01"},{"1":"N12","2":"2021-06-04","3":"North","4":"Retail","5":"Electrical system","6":"5","7":"20.16","8":"100.81","9":"Credit card","10":"0.03"},{"1":"N279","2":"2021-08-15","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"37.91","8":"151.65","9":"Credit card","10":"0.03"},{"1":"C180","2":"2021-07-05","3":"Central","4":"Retail","5":"Miscellaneous","6":"1","7":"24.63","8":"24.63","9":"Cash","10":"0.00"},{"1":"N230","2":"2021-08-02","3":"North","4":"Wholesale","5":"Engine","6":"40","7":"58.10","8":"2324.20","9":"Transfer","10":"0.01"},{"1":"N73","2":"2021-06-20","3":"North","4":"Retail","5":"Suspension & traction","6":"10","7":"37.06","8":"370.58","9":"Credit card","10":"0.03"},{"1":"N321","2":"2021-08-24","3":"North","4":"Wholesale","5":"Suspension & traction","6":"28","7":"37.03","8":"1036.93","9":"Transfer","10":"0.01"},{"1":"C463","2":"2021-08-24","3":"Central","4":"Retail","5":"Electrical system","6":"2","7":"23.95","8":"47.90","9":"Cash","10":"0.00"},{"1":"C139","2":"2021-06-27","3":"Central","4":"Retail","5":"Frame & body","6":"10","7":"35.73","8":"357.27","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"C16","2":"2021-06-04","3":"Central","4":"Retail","5":"Suspension & traction","6":"1","7":"37.03","8":"37.03","9":"Credit card","10":"0.03"},{"1":"N105","2":"2021-06-27","3":"North","4":"Retail","5":"Frame & body","6":"5","7":"38.71","8":"193.54","9":"Cash","10":"0.00"},{"1":"W29","2":"2021-06-18","3":"West","4":"Retail","5":"Electrical system","6":"1","7":"23.24","8":"23.24","9":"Credit card","10":"0.03"},{"1":"W94","2":"2021-07-13","3":"West","4":"Wholesale","5":"Braking system","6":"4","7":"17.06","8":"68.23","9":"Transfer","10":"0.01"},{"1":"N295","2":"2021-08-19","3":"North","4":"Wholesale","5":"Suspension & traction","6":"36","7":"30.64","8":"1103.04","9":"Transfer","10":"0.01"},{"1":"C51","2":"2021-06-12","3":"Central","4":"Retail","5":"Braking system","6":"10","7":"22.21","8":"222.08","9":"Credit card","10":"0.03"},{"1":"W38","2":"2021-06-21","3":"West","4":"Retail","5":"Engine","6":"6","7":"66.53","8":"399.19","9":"Cash","10":"0.00"},{"1":"N340","2":"2021-08-28","3":"North","4":"Wholesale","5":"Electrical system","6":"20","7":"27.41","8":"548.13","9":"Transfer","10":"0.01"},{"1":"C342","2":"2021-08-02","3":"Central","4":"Retail","5":"Suspension & traction","6":"9","7":"28.21","8":"253.86","9":"Credit card","10":"0.03"},{"1":"N261","2":"2021-08-09","3":"North","4":"Wholesale","5":"Electrical system","6":"28","7":"28.16","8":"788.34","9":"Transfer","10":"0.01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -205,6 +206,77 @@ Click to see the column details
 </div>
 </div>
 </div>
+</section>
+<section id="wholesale-net-revenue" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Wholesale Net Revenue</h1>
+<p>How much revenue comes from business (wholesale) sales? To answer this first question, I wrote an SQL query using a <code>GROUP BY</code> clause, an aggregate function, and a subquery.</p>
+<p>The results (see <a href="#tbl-sales-summary" class="quarto-xref">Table&nbsp;1</a>) show that between June and August 2021, approximately <strong>56%</strong> of AliMoto Supplies’ revenue came from sales to <strong>business customers</strong>, while the remaining 44% came from retail customers.</p>
+<p>This 12 % difference, equivalent to <strong>$33,883</strong>, is likely due to the larger order sizes (see <a href="#fig-avg-quantity" class="quarto-xref">Figure&nbsp;1</a>) placed by business customers. Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in higher total order values compared to individual retail customers.</p>
+<div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="annotated-cell-2-1"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get net revenue and revenue share for each client type</span></span>
+<span id="annotated-cell-2-2"><a href="#annotated-cell-2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> client_type, </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();" href="">1</a><span id="annotated-cell-2-3" class="code-annotation-target"><a href="#annotated-cell-2-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="kw">AS</span> net_revenue,</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="2" onclick="event.preventDefault();" href="">2</a><span id="annotated-cell-2-4" class="code-annotation-target"><a href="#annotated-cell-2-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="op">/</span> (</span>
+<span id="annotated-cell-2-5"><a href="#annotated-cell-2-5" aria-hidden="true" tabindex="-1"></a>          <span class="kw">SELECT</span> <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>))</span>
+<span id="annotated-cell-2-6"><a href="#annotated-cell-2-6" aria-hidden="true" tabindex="-1"></a>            <span class="kw">FROM</span> sales</span>
+<span id="annotated-cell-2-7"><a href="#annotated-cell-2-7" aria-hidden="true" tabindex="-1"></a>          ) <span class="kw">AS</span> revenue_share</span>
+<span id="annotated-cell-2-8"><a href="#annotated-cell-2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales </span>
+<span id="annotated-cell-2-9"><a href="#annotated-cell-2-9" aria-hidden="true" tabindex="-1"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> client_type;</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="3" data-code-annotation="1">Total revenue earned from each client type, after subtracting payment processing fees from each order.</span>
+</dd>
+<dt data-target-cell="annotated-cell-2" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-2" data-code-lines="4,5,6,7" data-code-annotation="2">The percentage of total net revenue that comes from each client type.</span>
+</dd>
+</dl>
+<div class="cell">
+<div id="tbl-sales-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sales-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Net revenue and revenue share for each client type
+</figcaption>
+<div aria-describedby="tbl-sales-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["client_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["net_revenue"],"name":[2],"type":["chr"],"align":["left"]},{"label":["revenue_share"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Retail","2":"$126,163","3":"44.4%"},{"1":"Wholesale","2":"$158,046","3":"55.6%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="fig-avg-quantity" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="fig-avg-quantity" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="img-fluid figure-img" data-ref-parent="fig-avg-quantity" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Business customers order, on average, five times more parts than retail customers.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Average quantity ordered by client type
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Having determined that 55% of net revenue comes from business customers, the next step is to explore how this revenue evolves month-to-month and across different warehouse locations.</p>
+</section>
+<section id="revenue-growth-across-warhouses" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Revenue Growth across Warhouses</h1>
+<p>How this revenue changes from month to month and across different warehouses?</p>
 </section>
 
 </main>
