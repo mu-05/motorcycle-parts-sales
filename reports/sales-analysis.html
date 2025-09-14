@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Murad LeGrand">
+<meta name="author" content="Murad M.">
 
 <title>Motorcycle Parts Sales</title>
 <style>
@@ -22,8 +22,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -34,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -59,15 +60,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <script src="sales-analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="sales-analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="sales-analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="sales-analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="sales-analysis_files/libs/quarto-html/popper.min.js"></script>
 <script src="sales-analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="sales-analysis_files/libs/quarto-html/anchor.min.js"></script>
 <link href="sales-analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="sales-analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="sales-analysis_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="sales-analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/bootstrap/bootstrap-32162a2fca7cb0439643f2faaab1edf3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="sales-analysis_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="sales-analysis_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="sales-analysis_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="sales-analysis_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -79,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body class="fullcontent quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
@@ -97,7 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Murad LeGrand </p>
+             <p>Murad M. </p>
           </div>
   </div>
     
@@ -112,28 +114,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
-<p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their sales data.</p>
-<p>They operate three warehouses, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
-<p>The company’s leadership team wants a better understanding of how much revenue is coming from wholesale sales. They’re especially interested in seeing how this revenue changes from month to month and across different warehouses.</p>
+<p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their <strong>sales data</strong>.</p>
+<p>They operate <strong>three warehouses</strong>, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
+<p>The company’s leadership team wants :</p>
+<ol type="1">
+<li>A better understanding of <mark>how much revenue is generated from wholesale sales</mark>.</li>
+<li>An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.</li>
+</ol>
 </section>
 <section id="dataset" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Dataset</h1>
-<p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code>, which contains 1,000 records and 10 fields detailing various aspects of each transaction (date, price, client type).</p>
-<p>I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The dataset is clean and ready for analysis (see <a href="#tbl-get-random-rows" class="quarto-xref">Table&nbsp;1</a>).</p>
-<div id="lst-get-random-rows" class="sql listing quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-float-lst figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-get-random-rows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Listing&nbsp;1: SQL query to return 10 random rows from the sales table
-</figcaption>
-<div aria-describedby="lst-get-random-rows-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="lst-get-random-rows"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="lst-get-random-rows-1"><a href="#lst-get-random-rows-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows</span></span>
-<span id="lst-get-random-rows-2"><a href="#lst-get-random-rows-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
-<span id="lst-get-random-rows-3"><a href="#lst-get-random-rows-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales</span>
-<span id="lst-get-random-rows-4"><a href="#lst-get-random-rows-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">RANDOM</span>()</span>
-<span id="lst-get-random-rows-5"><a href="#lst-get-random-rows-5" aria-hidden="true" tabindex="-1"></a> <span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</figure>
-</div>
+<p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code>, which contains <strong>1,000 records and 10 fields</strong> detailing various aspects of each transaction (date, price, client type), between June and August 2021.</p>
+<p>I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The <strong>dataset</strong> is clean and <strong>ready for analysis</strong> (see <a href="#tbl-get-random-rows" class="quarto-xref">Table&nbsp;1</a>).</p>
+<div class="sourceCode" id="code-get-10-random-rows"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="code-get-10-random-rows-1"><a href="#code-get-10-random-rows-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows</span></span>
+<span id="code-get-10-random-rows-2"><a href="#code-get-10-random-rows-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="code-get-10-random-rows-3"><a href="#code-get-10-random-rows-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales</span>
+<span id="code-get-10-random-rows-4"><a href="#code-get-10-random-rows-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">RANDOM</span>()</span>
+<span id="code-get-10-random-rows-5"><a href="#code-get-10-random-rows-5" aria-hidden="true" tabindex="-1"></a> <span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell">
 <div id="tbl-get-random-rows" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -144,7 +141,7 @@ Table&nbsp;1: Example rows (randomly selected) from the sales data
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"N32","2":"2021-06-10","3":"North","4":"Retail","5":"Suspension & traction","6":"6","7":"38.06","8":"228.38","9":"Cash","10":"0.00"},{"1":"C414","2":"2021-08-13","3":"Central","4":"Wholesale","5":"Frame & body","6":"32","7":"48.42","8":"1549.49","9":"Transfer","10":"0.01"},{"1":"N167","2":"2021-07-15","3":"North","4":"Retail","5":"Suspension & traction","6":"8","7":"41.59","8":"332.75","9":"Credit card","10":"0.03"},{"1":"W25","2":"2021-06-14","3":"West","4":"Retail","5":"Miscellaneous","6":"4","7":"18.63","8":"74.51","9":"Credit card","10":"0.03"},{"1":"N196","2":"2021-07-24","3":"North","4":"Retail","5":"Miscellaneous","6":"4","7":"25.58","8":"102.31","9":"Credit card","10":"0.03"},{"1":"C199","2":"2021-07-08","3":"Central","4":"Retail","5":"Braking system","6":"6","7":"15.58","8":"93.46","9":"Credit card","10":"0.03"},{"1":"C471","2":"2021-08-26","3":"Central","4":"Retail","5":"Electrical system","6":"3","7":"24.61","8":"73.82","9":"Credit card","10":"0.03"},{"1":"W78","2":"2021-07-05","3":"West","4":"Wholesale","5":"Suspension & traction","6":"4","7":"27.33","8":"109.32","9":"Transfer","10":"0.01"},{"1":"C391","2":"2021-08-10","3":"Central","4":"Retail","5":"Suspension & traction","6":"7","7":"31.79","8":"222.52","9":"Credit card","10":"0.03"},{"1":"N17","2":"2021-06-05","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"35.44","8":"141.77","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"C477","2":"2021-08-27","3":"Central","4":"Retail","5":"Engine","6":"10","7":"64.64","8":"646.45","9":"Credit card","10":"0.03"},{"1":"C118","2":"2021-06-25","3":"Central","4":"Retail","5":"Electrical system","6":"4","7":"25.19","8":"100.75","9":"Credit card","10":"0.03"},{"1":"C107","2":"2021-06-23","3":"Central","4":"Retail","5":"Suspension & traction","6":"6","7":"38.96","8":"233.77","9":"Cash","10":"0.00"},{"1":"C308","2":"2021-07-27","3":"Central","4":"Retail","5":"Frame & body","6":"4","7":"49.26","8":"197.03","9":"Credit card","10":"0.03"},{"1":"C325","2":"2021-07-31","3":"Central","4":"Retail","5":"Suspension & traction","6":"5","7":"27.20","8":"136.02","9":"Cash","10":"0.00"},{"1":"C452","2":"2021-08-22","3":"Central","4":"Retail","5":"Braking system","6":"6","7":"18.12","8":"108.75","9":"Credit card","10":"0.03"},{"1":"N242","2":"2021-08-05","3":"North","4":"Retail","5":"Suspension & traction","6":"1","7":"41.32","8":"41.32","9":"Credit card","10":"0.03"},{"1":"C252","2":"2021-07-16","3":"Central","4":"Retail","5":"Braking system","6":"7","7":"20.47","8":"143.31","9":"Credit card","10":"0.03"},{"1":"C394","2":"2021-08-10","3":"Central","4":"Wholesale","5":"Engine","6":"4","7":"56.50","8":"226.01","9":"Transfer","10":"0.01"},{"1":"C309","2":"2021-07-27","3":"Central","4":"Wholesale","5":"Miscellaneous","6":"24","7":"17.77","8":"426.40","9":"Transfer","10":"0.01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -152,7 +149,7 @@ Table&nbsp;1: Example rows (randomly selected) from the sales data
 </figure>
 </div>
 </div>
-<div class="callout callout-style-simple callout-none no-icon callout-titled" title="Click to see the column details">
+<div class="callout callout-style-simple callout-none no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -164,11 +161,12 @@ Click to see the column details
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<table class="caption-top table">
+<p>The following describes each field in the <code>sales</code> table, including its data type and a brief description of its meaning.</p>
+<table class="table-striped caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 34%">
-<col style="width: 40%">
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 69%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -211,12 +209,12 @@ Click to see the column details
 <tr class="odd">
 <td><code>unit_price</code></td>
 <td><code>REAL</code></td>
-<td>Price per product (euros).</td>
+<td>Price per product (US dollars).</td>
 </tr>
 <tr class="even">
 <td><code>total</code></td>
 <td><code>REAL</code></td>
-<td>Total price of the order (euros).</td>
+<td>Total price of the order (US dollars).</td>
 </tr>
 <tr class="odd">
 <td><code>payment</code></td>
@@ -236,25 +234,25 @@ Click to see the column details
 </section>
 <section id="wholesale-net-revenue" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Wholesale Net Revenue</h1>
-<p>How much revenue comes from business (wholesale) sales? To answer this first question, I wrote an SQL query using a <code>GROUP BY</code> clause, an aggregate function, and a subquery.</p>
+<p><mark>How much revenue comes from business (wholesale) sales?</mark> To answer this first question, I wrote an SQL query using a <code>GROUP BY</code> clause, an aggregate function, and a subquery.</p>
 <p>The results (see <a href="#tbl-sales-summary" class="quarto-xref">Table&nbsp;2</a>) show that between June and August 2021, approximately <strong>56%</strong> of AliMoto Supplies’ revenue came from sales to <strong>business customers</strong>, while the remaining 44% came from retail customers.</p>
-<div class="sourceCode" id="annotated-cell-1"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get net revenue and revenue share for each client type</span></span>
-<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> client_type, </span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();" href="">1</a><span id="annotated-cell-1-3" class="code-annotation-target"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="kw">AS</span> net_revenue,</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="2" onclick="event.preventDefault();" href="">2</a><span id="annotated-cell-1-4" class="code-annotation-target"><a href="#annotated-cell-1-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="op">/</span> (</span>
-<span id="annotated-cell-1-5"><a href="#annotated-cell-1-5" aria-hidden="true" tabindex="-1"></a>          <span class="kw">SELECT</span> <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>))</span>
-<span id="annotated-cell-1-6"><a href="#annotated-cell-1-6" aria-hidden="true" tabindex="-1"></a>            <span class="kw">FROM</span> sales</span>
-<span id="annotated-cell-1-7"><a href="#annotated-cell-1-7" aria-hidden="true" tabindex="-1"></a>          ) <span class="kw">AS</span> revenue_share</span>
-<span id="annotated-cell-1-8"><a href="#annotated-cell-1-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales </span>
-<span id="annotated-cell-1-9"><a href="#annotated-cell-1-9" aria-hidden="true" tabindex="-1"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> client_type;</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="code-revenue-summary"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="code-revenue-summary-1"><a href="#code-revenue-summary-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Calculate net revenue and revenue share for each client type</span></span>
+<span id="code-revenue-summary-2"><a href="#code-revenue-summary-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> client_type, </span>
+<a class="code-annotation-anchor" data-target-cell="code-revenue-summary" data-target-annotation="1" onclick="event.preventDefault();" href="">1</a><span id="code-revenue-summary-3" class="code-annotation-target"><a href="#code-revenue-summary-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="kw">AS</span> net_revenue,</span>
+<a class="code-annotation-anchor" data-target-cell="code-revenue-summary" data-target-annotation="2" onclick="event.preventDefault();" href="">2</a><span id="code-revenue-summary-4" class="code-annotation-target"><a href="#code-revenue-summary-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>)) <span class="op">/</span> (</span>
+<span id="code-revenue-summary-5"><a href="#code-revenue-summary-5" aria-hidden="true" tabindex="-1"></a>          <span class="kw">SELECT</span> <span class="fu">SUM</span>(total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>))</span>
+<span id="code-revenue-summary-6"><a href="#code-revenue-summary-6" aria-hidden="true" tabindex="-1"></a>            <span class="kw">FROM</span> sales</span>
+<span id="code-revenue-summary-7"><a href="#code-revenue-summary-7" aria-hidden="true" tabindex="-1"></a>          ) <span class="kw">AS</span> revenue_share</span>
+<span id="code-revenue-summary-8"><a href="#code-revenue-summary-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales </span>
+<span id="code-revenue-summary-9"><a href="#code-revenue-summary-9" aria-hidden="true" tabindex="-1"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> client_type;</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dt data-target-cell="code-revenue-summary" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="3" data-code-annotation="1">Total revenue earned from each client type, after subtracting payment processing fees from each order.</span>
+<span data-code-cell="code-revenue-summary" data-code-lines="3" data-code-annotation="1">Total revenue earned from each client type, after subtracting payment fees from each order.</span>
 </dd>
-<dt data-target-cell="annotated-cell-1" data-target-annotation="2">2</dt>
+<dt data-target-cell="code-revenue-summary" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-1" data-code-lines="4,5,6,7" data-code-annotation="2">The percentage of total net revenue that comes from each client type.</span>
+<span data-code-cell="code-revenue-summary" data-code-lines="4,5,6,7" data-code-annotation="2">The percentage of total net revenue that comes from each client type.</span>
 </dd>
 </dl>
 <div class="cell">
@@ -267,7 +265,7 @@ Table&nbsp;2: Net revenue and revenue share for each client type
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["client_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["net_revenue"],"name":[2],"type":["chr"],"align":["left"]},{"label":["revenue_share"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Retail","2":"$126,162.52","3":"44.4%"},{"1":"Wholesale","2":"$158,045.91","3":"55.6%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["client_type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["net_revenue"],"name":[2],"type":["chr"],"align":["left"]},{"label":["revenue_share"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Retail","2":"$126,163","3":"44.4%"},{"1":"Wholesale","2":"$158,046","3":"55.6%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -275,61 +273,65 @@ Table&nbsp;2: Net revenue and revenue share for each client type
 </figure>
 </div>
 </div>
-<p>This 12 % difference, equivalent to <strong>$33,883</strong>, is likely due to the larger order sizes (see <a href="#fig-avg-quantity" class="quarto-xref">Figure&nbsp;1</a>) placed by business customers. Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in higher total order values compared to individual retail customers.</p>
+<p>This <strong>12 % difference</strong> in revenue share, equivalent to <strong>$31,883</strong>, is likely due to the larger order sizes placed by business customers (see <a href="#fig-avg-quantity" class="quarto-xref">Figure&nbsp;1</a>). Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in <strong>higher total order values</strong> compared to individual retail customers.</p>
 <div class="cell">
-<div id="fig-avg-quantity" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div id="fig-avg-quantity" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="lightbox" data-gallery="fig-avg-quantity" title="Figure&nbsp;1&nbsp;(a): Business customers order, on average, five times more parts than retail customers."><img src="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="img-fluid figure-img" data-ref-parent="fig-avg-quantity" width="672"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Business customers order, on average, five times more parts than retail customers.
-</figcaption>
-</figure>
-</div>
-</div>
+<a href="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Average quantity ordered by client type.  Business customers order, on average, five times more parts than retail customers."><img src="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Average quantity ordered by client type
+Figure&nbsp;1: Average quantity ordered by client type.<br> Business customers order, on average, five times more parts than retail customers.
 </figcaption>
 </figure>
 </div>
 </div>
-<p>Having determined that 55% of net revenue comes from business customers, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.</p>
+</div>
+<p>Having determined that <strong>56%</strong> of net revenue comes from <strong>business customers</strong>, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.</p>
 </section>
 <section id="monthly-revenue-growth-across-warhouses" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Monthly Revenue Growth Across Warhouses</h1>
-<p>To analyze the evolution of wholesale revenue, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the <strong>monthly net revenue by warehouse</strong>, as shown in <a href="#tbl-monthly-revenue" class="quarto-xref">Table&nbsp;3</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Step 1: Create a temporary table of wholesale sales</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Adds month information and calculates net total (after payment fee)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> sales_wholesale_revenue <span class="kw">AS</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> warehouse,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>         <span class="dt">date</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">CAST</span>(strftime(<span class="st">'%m'</span>, <span class="dt">date</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> month_int,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         <span class="cf">CASE</span> strftime(<span class="st">'%m'</span>, <span class="dt">date</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'06'</span> <span class="cf">THEN</span> <span class="st">'June'</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'07'</span> <span class="cf">THEN</span> <span class="st">'July'</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'08'</span> <span class="cf">THEN</span> <span class="st">'August'</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         <span class="cf">END</span> <span class="kw">AS</span> month_chr,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>         total,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>         payment_fee,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>         total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>) <span class="kw">AS</span> net_total</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> sales</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>   <span class="kw">WHERE</span> client_type <span class="op">=</span> <span class="st">'Wholesale'</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- Step 2: Summarize net revenue by warehouse and month</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> warehouse,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>       month_int,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>       month_chr,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(net_total) <span class="kw">AS</span> net_revenue</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales_wholesale_revenue</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> warehouse, month_int, month_chr</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> warehouse, month_int;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><mark>To analyze the evolution of wholesale revenue</mark>, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the <strong>monthly net revenue by warehouse</strong>, as shown in <a href="#tbl-monthly-revenue" class="quarto-xref">Table&nbsp;3</a>.</p>
+<div class="sourceCode" id="code-monthly-revenue-summary"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="code-monthly-revenue-summary-1"><a href="#code-monthly-revenue-summary-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Step 1: Create a temporary table of wholesale sales</span></span>
+<span id="code-monthly-revenue-summary-2"><a href="#code-monthly-revenue-summary-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Adds month information and calculates net total (after payment fee)</span></span>
+<span id="code-monthly-revenue-summary-3"><a href="#code-monthly-revenue-summary-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> sales_wholesale_revenue <span class="kw">AS</span>(</span>
+<span id="code-monthly-revenue-summary-4"><a href="#code-monthly-revenue-summary-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> warehouse,</span>
+<span id="code-monthly-revenue-summary-5"><a href="#code-monthly-revenue-summary-5" aria-hidden="true" tabindex="-1"></a>         <span class="dt">date</span>,</span>
+<a class="code-annotation-anchor" data-target-cell="code-monthly-revenue-summary" data-target-annotation="1" onclick="event.preventDefault();" href="">1</a><span id="code-monthly-revenue-summary-6" class="code-annotation-target"><a href="#code-monthly-revenue-summary-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">CAST</span>(strftime(<span class="st">'%m'</span>, <span class="dt">date</span>) <span class="kw">AS</span> <span class="dt">INT</span>) <span class="kw">AS</span> month_int,</span>
+<a class="code-annotation-anchor" data-target-cell="code-monthly-revenue-summary" data-target-annotation="2" onclick="event.preventDefault();" href="">2</a><span id="code-monthly-revenue-summary-7" class="code-annotation-target"><a href="#code-monthly-revenue-summary-7" aria-hidden="true" tabindex="-1"></a>         <span class="cf">CASE</span> strftime(<span class="st">'%m'</span>, <span class="dt">date</span>)</span>
+<span id="code-monthly-revenue-summary-8"><a href="#code-monthly-revenue-summary-8" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'06'</span> <span class="cf">THEN</span> <span class="st">'June'</span></span>
+<span id="code-monthly-revenue-summary-9"><a href="#code-monthly-revenue-summary-9" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'07'</span> <span class="cf">THEN</span> <span class="st">'July'</span></span>
+<span id="code-monthly-revenue-summary-10"><a href="#code-monthly-revenue-summary-10" aria-hidden="true" tabindex="-1"></a>                <span class="cf">WHEN</span> <span class="st">'08'</span> <span class="cf">THEN</span> <span class="st">'August'</span></span>
+<span id="code-monthly-revenue-summary-11"><a href="#code-monthly-revenue-summary-11" aria-hidden="true" tabindex="-1"></a>         <span class="cf">END</span> <span class="kw">AS</span> month_chr,</span>
+<span id="code-monthly-revenue-summary-12"><a href="#code-monthly-revenue-summary-12" aria-hidden="true" tabindex="-1"></a>         total,</span>
+<span id="code-monthly-revenue-summary-13"><a href="#code-monthly-revenue-summary-13" aria-hidden="true" tabindex="-1"></a>         payment_fee,</span>
+<a class="code-annotation-anchor" data-target-cell="code-monthly-revenue-summary" data-target-annotation="3" onclick="event.preventDefault();" href="">3</a><span id="code-monthly-revenue-summary-14" class="code-annotation-target"><a href="#code-monthly-revenue-summary-14" aria-hidden="true" tabindex="-1"></a>         total <span class="op">-</span> <span class="fu">ROUND</span>(total <span class="op">*</span> payment_fee, <span class="dv">2</span>) <span class="kw">AS</span> net_total</span>
+<span id="code-monthly-revenue-summary-15"><a href="#code-monthly-revenue-summary-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> sales</span>
+<span id="code-monthly-revenue-summary-16"><a href="#code-monthly-revenue-summary-16" aria-hidden="true" tabindex="-1"></a>   <span class="kw">WHERE</span> client_type <span class="op">=</span> <span class="st">'Wholesale'</span></span>
+<span id="code-monthly-revenue-summary-17"><a href="#code-monthly-revenue-summary-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="code-monthly-revenue-summary-18"><a href="#code-monthly-revenue-summary-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="code-monthly-revenue-summary-19"><a href="#code-monthly-revenue-summary-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- Step 2: Summarize net revenue by warehouse and month</span></span>
+<span id="code-monthly-revenue-summary-20"><a href="#code-monthly-revenue-summary-20" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> warehouse,</span>
+<span id="code-monthly-revenue-summary-21"><a href="#code-monthly-revenue-summary-21" aria-hidden="true" tabindex="-1"></a>       month_chr,</span>
+<span id="code-monthly-revenue-summary-22"><a href="#code-monthly-revenue-summary-22" aria-hidden="true" tabindex="-1"></a>       <span class="fu">SUM</span>(net_total) <span class="kw">AS</span> net_revenue</span>
+<span id="code-monthly-revenue-summary-23"><a href="#code-monthly-revenue-summary-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales_wholesale_revenue</span>
+<span id="code-monthly-revenue-summary-24"><a href="#code-monthly-revenue-summary-24" aria-hidden="true" tabindex="-1"></a> <span class="kw">GROUP</span> <span class="kw">BY</span> warehouse, month_int, month_chr</span>
+<span id="code-monthly-revenue-summary-25"><a href="#code-monthly-revenue-summary-25" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> warehouse, month_int;</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="code-monthly-revenue-summary" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="code-monthly-revenue-summary" data-code-lines="6" data-code-annotation="1">Extract the month number from the transaction date for chronological sorting.</span>
+</dd>
+<dt data-target-cell="code-monthly-revenue-summary" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="code-monthly-revenue-summary" data-code-lines="7,8,9,10,11" data-code-annotation="2">Derive the full month name from the month number for readability.</span>
+</dd>
+<dt data-target-cell="code-monthly-revenue-summary" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="code-monthly-revenue-summary" data-code-lines="14" data-code-annotation="3">Calculate each transaction’s total after deducting payment fees.</span>
+</dd>
+</dl>
 <div class="cell">
 <div id="tbl-monthly-revenue" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -340,7 +342,7 @@ Table&nbsp;3: Monthly net revenue by warehouse
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["warehouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["month_chr"],"name":[2],"type":["chr"],"align":["left"]},{"label":["net_revenue"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Central","2":"June","3":"$23,218.89"},{"1":"Central","2":"July","3":"$23,654.99"},{"1":"Central","2":"August","3":"$31,194.31"},{"1":"North","2":"June","3":"$16,830.34"},{"1":"North","2":"July","3":"$17,409.65"},{"1":"North","2":"August","3":"$23,245.62"},{"1":"West","2":"June","3":"$8,559.65"},{"1":"West","2":"July","3":"$7,530.60"},{"1":"West","2":"August","3":"$6,401.85"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["warehouse"],"name":[1],"type":["chr"],"align":["left"]},{"label":["month_chr"],"name":[2],"type":["chr"],"align":["left"]},{"label":["net_revenue"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Central","2":"June","3":"$23,219"},{"1":"Central","2":"July","3":"$23,655"},{"1":"Central","2":"August","3":"$31,194"},{"1":"North","2":"June","3":"$16,830"},{"1":"North","2":"July","3":"$17,410"},{"1":"North","2":"August","3":"$23,246"},{"1":"West","2":"June","3":"$8,560"},{"1":"West","2":"July","3":"$7,531"},{"1":"West","2":"August","3":"$6,402"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -356,263 +358,263 @@ Table&nbsp;3: Monthly net revenue by warehouse
 </ol>
 <p>These findings indicate that <strong>overall net revenue growth from business customers is being held back by the underperformance of the West warehouse</strong>. Improving operations or marketing efforts in this location may help boost total wholesale revenue moving forward.</p>
 <div class="cell">
-<div id="fig-monthly-sales" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <div id="fig-monthly-sales" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
+<figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="lightbox" data-gallery="fig-monthly-sales" title="Figure&nbsp;2&nbsp;(a): Central and North warehouses show strong growth, while West declines steadily."><img src="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="img-fluid figure-img" data-ref-parent="fig-monthly-sales" width="672"></a>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a) Central and North warehouses show strong growth, while West declines steadily.
-</figcaption>
-</figure>
-</div>
-</div>
+<a href="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Net Revenue Trends Across Warehouses.  Central and North warehouses show strong growth, while West declines steadily."><img src="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Net Revenue Trends Across Warehouses
+Figure&nbsp;2: Net Revenue Trends Across Warehouses.<br> Central and North warehouses show strong growth, while West declines steadily.
 </figcaption>
 </figure>
 </div>
 </div>
+</div>
+</section>
+<section id="conclusion-and-key-insights" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Conclusion and Key Insights</h1>
 </section>
 
 </main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
+      return false;
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
         }
-        return container.innerHTML
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -620,185 +622,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
