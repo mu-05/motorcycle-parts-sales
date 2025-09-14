@@ -1,43 +1,4 @@
-# Load libraries
-library(tidyverse)
-library(DBI)
-library(RSQLite)
-library(scales)
-
-# Get working directory
-getwd()
-
-# Load data
-sales <- read_csv(file = "data/sales.csv")
-
-# Glimpse
-glimpse(sales)
-
-# Convert date column from POSIXct to character 
-sales$date <- as.Date(x = sales$date)
-sales$date <- format(sales$date, "%Y-%m-%d")
-class(sales$date)
-
-# Create SQLite connection
-con <- dbConnect(
-  drv = RSQLite::SQLite(), 
-  dbname = ":memory:")
-
-# Write the data frame to the database
-dbWriteTable(
-  conn = con,
-  name = "sales",
-  value = sales
-)
-
-# See the data using R code
-DBI::dbGetQuery(con, "SELECT * FROM sales LIMIT 10;")
-
-# See column details
-DBI::dbGetQuery(con, "PRAGMA table_info(sales)")
-
-# Get month number using strftime() function
-DBI::dbGetQuery(con, "SELECT strftime('%m', date) FROM sales ORDER BY RANDOM() LIMIT 10;")
+# Part 1 - Net revenue
 
 # Calculate net revenue
 DBI::dbGetQuery(con, "SELECT order_number, ROUND(total - (total * payment_fee), 2) AS net_revenue FROM sales LIMIT 10;")
@@ -137,6 +98,3 @@ gridExtra::grid.arrange(plot1, plot2)
 ggplot(sales, aes(x = quantity)) +
   geom_histogram(bins = 5) +
   facet_wrap(vars(client_type))
-
-# Close the connection
-dbDisconnect(con)

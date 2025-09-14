@@ -1,6 +1,7 @@
 ---
 title: "Motorcycle Parts Sales"
-author: ""
+author: "Murad LeGrand"
+lightbox: true
 format: 
   html:
     number-sections: true
@@ -21,11 +22,12 @@ The company's leadership team wants a better understanding of how much revenue i
 
 # Dataset
 
-To explore these questions, AliMoto provided access their database, specifically a table called `sales`, which  contains 1,000 records and 10 fields detailing various aspects of each transaction (date, price, client type).
+To explore these questions, AliMoto provided access their database, specifically a table called `sales`, which contains 1,000 records and 10 fields detailing various aspects of each transaction (date, price, client type).
 
-I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The dataset is clean and ready for analysis.
+I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The dataset is clean and ready for analysis (see @tbl-get-random-rows).
 
 ```{r}
+#| label: code-load-data
 #| echo: false
 #| output: false
 # Load libraries
@@ -55,7 +57,8 @@ dbWriteTable(
 )
 ```
 
-``` sql
+
+```{#lst-get-random-rows .sql lst-cap="SQL query to return 10 random rows from the sales table"}
 -- Get 10 random rows
 SELECT *
   FROM sales
@@ -65,6 +68,8 @@ SELECT *
 
 ```{r}
 #| echo: false
+#| label: tbl-get-random-rows
+#| tbl-cap: "Example rows (randomly selected) from the sales data"
 # Get 10 random rows
 DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 10")
 ```
@@ -88,9 +93,7 @@ DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 10")
 
 How much revenue comes from business (wholesale) sales? To answer this first question, I wrote an SQL query using a `GROUP BY` clause, an aggregate function, and a subquery.
 
-The results (see @tbl-sales-summary) show that between June and August 2021, approximately **56%** of AliMoto Supplies' revenue came from sales to **business customers**, while the remaining 44% came from retail customers. 
-
-This 12 % difference, equivalent to **$33,883**, is likely due to the larger order sizes (see @fig-avg-quantity) placed by business customers. Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in higher total order values compared to individual retail customers.
+The results (see @tbl-sales-summary) show that between June and August 2021, approximately **56%** of AliMoto Supplies' revenue came from sales to **business customers**, while the remaining 44% came from retail customers.
 
 ``` sql
 -- Get net revenue and revenue share for each client type
@@ -103,8 +106,9 @@ SELECT client_type,
   FROM sales 
  GROUP BY client_type;
 ```
-1. Total revenue earned from each client type, after subtracting payment processing fees from each order.
-2. The percentage of total net revenue that comes from each client type.
+
+1.  Total revenue earned from each client type, after subtracting payment processing fees from each order.
+2.  The percentage of total net revenue that comes from each client type.
 
 ```{r}
 #| echo: false
@@ -124,20 +128,24 @@ sales_summary <- sales %>%
 
 sales_summary_formatted <- sales_summary %>%
   mutate(
-    net_revenue = scales::dollar(net_revenue),
+    net_revenue = scales::dollar(net_revenue, accuracy = 0.01),
     revenue_share = scales::percent(revenue_share, accuracy = 0.1)
   )
 
 sales_summary_formatted
 ```
 
+This 12 % difference, equivalent to **\$33,883**, is likely due to the larger order sizes (see @fig-avg-quantity) placed by business customers. Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in higher total order values compared to individual retail customers.
+
 ```{r}
 #| label: fig-avg-quantity
 #| fig-cap: "Average quantity ordered by client type"
 #| fig-subcap: "Business customers order, on average, five times more parts than retail customers."
 #| echo: false
+
+
 # Set default theme
-theme_set(theme_bw(base_size = 16)) 
+theme_set(theme_minimal(base_size = 14)) 
 
 # Calculate summary statistics
 client_type_averages <- sales %>%
@@ -164,12 +172,95 @@ avg_quantity_plot
 
 ```
 
-Having determined that 55% of net revenue comes from business customers, the next step is to explore how this revenue evolves month-to-month and across different warehouse locations.
+Having determined that 55% of net revenue comes from business customers, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.
 
-# Revenue Growth across Warhouses 
+# Monthly Revenue Growth Across Warhouses
 
-How this revenue changes from month to month and across different warehouses?
+To analyze the evolution of wholesale revenue, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the **monthly net revenue by warehouse**, as shown in @tbl-monthly-revenue.
 
+``` sql
+-- Step 1: Create a temporary table of wholesale sales
+-- Adds month information and calculates net total (after payment fee)
+WITH sales_wholesale_revenue AS(
+  SELECT warehouse,
+         date,
+         CAST(strftime('%m', date) AS INT) AS month_int,
+         CASE strftime('%m', date)
+                WHEN '06' THEN 'June'
+                WHEN '07' THEN 'July'
+                WHEN '08' THEN 'August'
+         END AS month_chr,
+         total,
+         payment_fee,
+         total - ROUND(total * payment_fee, 2) AS net_total
+    FROM sales
+   WHERE client_type = 'Wholesale'
+)
+
+-- Step 2: Summarize net revenue by warehouse and month
+SELECT warehouse,
+       month_int,
+       month_chr,
+       SUM(net_total) AS net_revenue
+  FROM sales_wholesale_revenue
+ GROUP BY warehouse, month_int, month_chr
+ ORDER BY warehouse, month_int;
+```
+
+```{r}
+#| echo: false
+#| label: tbl-monthly-revenue
+#| tbl-cap: "Monthly net revenue by warehouse"
+#| message: FALSE
+
+sales_monthly_revenue <- sales %>%
+  filter(client_type == "Wholesale") %>%
+  mutate(
+    month_int = month(x = date),
+    month_chr = month(x = date, label = TRUE, abbr = FALSE),
+    net_total = total - round(total * payment_fee, 2)
+    ) %>%
+  group_by(warehouse, month_int, month_chr) %>%
+  summarize(net_revenue = sum(net_total)) %>%
+  ungroup()
+
+sales_monthly_revenue_formatted <- sales_monthly_revenue %>%
+  select(-month_int) %>%
+  mutate(
+    net_revenue = scales::dollar(net_revenue), 
+    month_chr = as.character(month_chr)
+  )
+
+sales_monthly_revenue_formatted
+```
+
+To visualize trends more clearly, I created a **line plot** of monthly revenue by warehouse (see @fig-monthly-sales). This revealed three key insights:
+
+1.  **Higher Average Revenue in Central and North Warehouses**<br> From June to August, the Central and North warehouses generated significantly higher average monthly revenue (\$26,000 and \$19,200, respectively) compared to the West warehouse (\$7,500).
+2.  **Strong Growth in Central and North Warehouses**<br> Between July and August, net revenue in Central and North warehouses increased by an average of 33%.
+3.  **Decline in West Warehouse Performance**<br> In contrast, the West warehouse experienced a decline in net revenue, with an average decrease of 13% over the same period.
+
+These findings indicate that **overall net revenue growth from business customers is being held back by the underperformance of the West warehouse**. Improving operations or marketing efforts in this location may help boost total wholesale revenue moving forward.
+
+```{r}
+#| label: fig-monthly-sales
+#| fig-cap: "Net Revenue Trends Across Warehouses"
+#| fig-subcap: "Central and North warehouses show strong growth, while West declines steadily."
+#| echo: false
+
+# Plot: monthly net revenue by warehouse
+monthly_sales_plot <- ggplot(sales_monthly_revenue, aes(x = month_chr, y = net_revenue, group = warehouse)) +
+  geom_line(aes(color = warehouse), linewidth = 2) +
+  labs(
+    title = "Net Revenue Trends Across Warehouses",
+    x = "Month",
+    y = "Net Revenue",
+    color = "Warehouse"
+  ) +
+  scale_y_continuous(label = scales::label_dollar()) 
+
+monthly_sales_plot
+```
 
 ```{r}
 #| echo: false
