@@ -1,23 +1,28 @@
-# Part 1 - Net revenue
+# Exploratory Analysis - Net revenue
 
-# Calculate net revenue
-DBI::dbGetQuery(con, "SELECT order_number, ROUND(total - (total * payment_fee), 2) AS net_revenue FROM sales LIMIT 10;")
+# Calculate net total for each transaction
+query <- "
+  SELECT order_number, 
+         total - ROUND(total * payment_fee, 2) AS net_total
+    FROM sales
+  LIMIT 10;
+"
+DBI::dbGetQuery(con, query)
 
-# Calculate net revenue by client type
+# Calculate net revenue and revenue share for each client type
 query <- "
   SELECT client_type, 
          SUM(total - ROUND(total * payment_fee, 2)) AS net_revenue,
-         SUM(total - ROUND(total * payment_fee, 2)) / 
-            (
-              SELECT SUM(total - ROUND(total * payment_fee, 2))
-                FROM sales
-            ) AS percent
+         SUM(total - ROUND(total * payment_fee, 2)) / (
+            SELECT SUM(total - ROUND(total * payment_fee, 2))
+              FROM sales
+            ) AS revenue_share
     FROM sales 
    GROUP BY client_type;
 "
 DBI::dbGetQuery(con, query)
 
-# ... with R
+# Calculate net revenue an revenue share with R
 sales_summary <- sales %>% 
   group_by(client_type) %>%
   summarize(
@@ -30,17 +35,14 @@ sales_summary <- sales %>%
 
 sales_summary
 
+# Format the data
 sales_summary_formatted <- sales_summary %>%
   mutate(
-    net_revenue_label = scales::dollar(net_revenue),
-    revenue_share_label = scales::percent(revenue_share, accuracy = 0.1)
-  ) %>%
-  select(client_type, net_revenue_label, revenue_share_label)
+    net_revenue = scales::dollar(net_revenue, accuracy = 1),
+    revenue_share = scales::percent(revenue_share, accuracy = 0.1)
+  )
 
 sales_summary_formatted
-
-# Set default theme
-theme_set(theme_bw(base_size = 14)) 
 
 # Plot net revenue by client type
 ggplot(sales_summary, aes(x = client_type, y = net_revenue)) +
@@ -52,13 +54,7 @@ ggplot(sales_summary, aes(x = client_type, y = net_revenue)) +
     labels = scales::dollar_format()
   )
 
-# Set number of digits
-?options
-getOption(x = "digits")
-
-glimpse(sales)
-
-# Get sales means
+# Calculate sales means
 sales_means <- sales %>%
   group_by(client_type) %>%
   summarize(
@@ -71,19 +67,19 @@ sales_means <- sales %>%
   )
 
 # Plot mean quantity by client type
-plot1 <- ggplot(sales_means, aes(x = client_type, y = mean_quantity)) +
+avg_quantity_plot <- ggplot(sales_means, aes(x = client_type, y = mean_quantity)) +
   geom_col() +
   labs(
-    title= "Average Quantity Ordered by Client Type",
+    title= "Average Quantity Ordered\nby Client Type",
     x = "Type of Client",
     y = "Average Quantity Ordered"
   )
 
 # Plot mean total by client type
-plot2 <- ggplot(sales_means, aes(x = client_type, y = mean_total)) +
+avg_total_plot <- ggplot(sales_means, aes(x = client_type, y = mean_total)) +
   geom_col() +
   labs(
-    title= "Average Order Amount by Client Type",
+    title= "Average Order Amount\nby Client Type",
     x = "Type of Client",
     y = "Average Order Amount"
   ) + 
@@ -91,10 +87,5 @@ plot2 <- ggplot(sales_means, aes(x = client_type, y = mean_total)) +
     labels = scales::dollar_format()
   )
 
-# Plot 
-gridExtra::grid.arrange(plot1, plot2)
-
-# Histogram of quantity sold
-ggplot(sales, aes(x = quantity)) +
-  geom_histogram(bins = 5) +
-  facet_wrap(vars(client_type))
+# Arrange the plots side by side 
+gridExtra::grid.arrange(avg_quantity_plot, avg_total_plot, ncol = 2)

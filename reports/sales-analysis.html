@@ -112,21 +112,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<section id="business-problem" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Business Problem</h1>
 <p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their <strong>sales data</strong>.</p>
-<p>They operate <strong>three warehouses</strong>, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
+<p>They operate <strong>three warehouses</strong>, and sell products to both <strong>individual customers</strong> (retail) and <strong>businesses</strong> (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
 <p>The company’s leadership team wants :</p>
 <ol type="1">
 <li>A better understanding of <mark>how much revenue is generated from wholesale sales</mark>.</li>
 <li>An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.</li>
 </ol>
 </section>
-<section id="dataset" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Dataset</h1>
+<section id="dataset-overview" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Dataset Overview</h1>
 <p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code>, which contains <strong>1,000 records and 10 fields</strong> detailing various aspects of each transaction (date, price, client type), between June and August 2021.</p>
 <p>I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The <strong>dataset</strong> is clean and <strong>ready for analysis</strong> (see <a href="#tbl-get-random-rows" class="quarto-xref">Table&nbsp;1</a>).</p>
-<div class="sourceCode" id="code-get-10-random-rows"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="code-get-10-random-rows-1"><a href="#code-get-10-random-rows-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows</span></span>
+<div class="sourceCode" id="code-get-10-random-rows"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="code-get-10-random-rows-1"><a href="#code-get-10-random-rows-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows from the sales table</span></span>
 <span id="code-get-10-random-rows-2"><a href="#code-get-10-random-rows-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
 <span id="code-get-10-random-rows-3"><a href="#code-get-10-random-rows-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> sales</span>
 <span id="code-get-10-random-rows-4"><a href="#code-get-10-random-rows-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">RANDOM</span>()</span>
@@ -141,7 +141,7 @@ Table&nbsp;1: Example rows (randomly selected) from the sales data
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"C477","2":"2021-08-27","3":"Central","4":"Retail","5":"Engine","6":"10","7":"64.64","8":"646.45","9":"Credit card","10":"0.03"},{"1":"C118","2":"2021-06-25","3":"Central","4":"Retail","5":"Electrical system","6":"4","7":"25.19","8":"100.75","9":"Credit card","10":"0.03"},{"1":"C107","2":"2021-06-23","3":"Central","4":"Retail","5":"Suspension & traction","6":"6","7":"38.96","8":"233.77","9":"Cash","10":"0.00"},{"1":"C308","2":"2021-07-27","3":"Central","4":"Retail","5":"Frame & body","6":"4","7":"49.26","8":"197.03","9":"Credit card","10":"0.03"},{"1":"C325","2":"2021-07-31","3":"Central","4":"Retail","5":"Suspension & traction","6":"5","7":"27.20","8":"136.02","9":"Cash","10":"0.00"},{"1":"C452","2":"2021-08-22","3":"Central","4":"Retail","5":"Braking system","6":"6","7":"18.12","8":"108.75","9":"Credit card","10":"0.03"},{"1":"N242","2":"2021-08-05","3":"North","4":"Retail","5":"Suspension & traction","6":"1","7":"41.32","8":"41.32","9":"Credit card","10":"0.03"},{"1":"C252","2":"2021-07-16","3":"Central","4":"Retail","5":"Braking system","6":"7","7":"20.47","8":"143.31","9":"Credit card","10":"0.03"},{"1":"C394","2":"2021-08-10","3":"Central","4":"Wholesale","5":"Engine","6":"4","7":"56.50","8":"226.01","9":"Transfer","10":"0.01"},{"1":"C309","2":"2021-07-27","3":"Central","4":"Wholesale","5":"Miscellaneous","6":"24","7":"17.77","8":"426.40","9":"Transfer","10":"0.01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"W120","2":"2021-07-27","3":"West","4":"Retail","5":"Braking system","6":"9","7":"12.16","8":"109.40","9":"Credit card","10":"0.03"},{"1":"C476","2":"2021-08-27","3":"Central","4":"Retail","5":"Engine","6":"5","7":"59.14","8":"295.72","9":"Credit card","10":"0.03"},{"1":"W40","2":"2021-06-23","3":"West","4":"Retail","5":"Electrical system","6":"7","7":"33.33","8":"233.29","9":"Credit card","10":"0.03"},{"1":"N156","2":"2021-07-11","3":"North","4":"Retail","5":"Miscellaneous","6":"5","7":"20.76","8":"103.82","9":"Credit card","10":"0.03"},{"1":"N38","2":"2021-06-11","3":"North","4":"Wholesale","5":"Miscellaneous","6":"24","7":"21.42","8":"514.00","9":"Transfer","10":"0.01"},{"1":"C237","2":"2021-07-13","3":"Central","4":"Wholesale","5":"Suspension & traction","6":"40","7":"35.06","8":"1402.53","9":"Transfer","10":"0.01"},{"1":"N209","2":"2021-07-28","3":"North","4":"Retail","5":"Miscellaneous","6":"10","7":"25.74","8":"257.40","9":"Credit card","10":"0.03"},{"1":"C322","2":"2021-07-30","3":"Central","4":"Wholesale","5":"Braking system","6":"28","7":"21.88","8":"612.78","9":"Transfer","10":"0.01"},{"1":"C167","2":"2021-07-03","3":"Central","4":"Retail","5":"Braking system","6":"7","7":"12.59","8":"88.15","9":"Credit card","10":"0.03"},{"1":"N41","2":"2021-06-12","3":"North","4":"Retail","5":"Braking system","6":"9","7":"11.67","8":"105.02","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -372,8 +372,22 @@ Figure&nbsp;2: Net Revenue Trends Across Warehouses.<br> Central and North wareh
 </div>
 </div>
 </section>
-<section id="conclusion-and-key-insights" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Conclusion and Key Insights</h1>
+<section id="key-findings-and-recommendations" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Key Findings and Recommendations</h1>
+<p>This analysis provided a better understanding of AliMoto Supplies’ revenue, particularly from transactions with business customers.</p>
+<p>Key findings include:</p>
+<ul>
+<li><strong>Wholesale sales</strong> account for <strong>56% of total revenue</strong>, making them a major source of income for the company.</li>
+<li><strong>Revenue in the Central and North warehouses increased</strong> significantly, by an average of <strong>33%</strong>, between July and August.</li>
+<li>In contrast, the <strong>West warehouse has experienced a steady decline in revenue</strong>, by an average of <strong>13%</strong> per month since June.</li>
+</ul>
+<p>To support improvements in performance, I recommend the following:</p>
+<ol type="1">
+<li><strong>Track monthly net revenue for each warehouse</strong> to monitor trends and quickly respond to any changes.</li>
+<li><strong>Investigate the sales strategies used in the Central and North warehouses</strong> to understand what’s driving their success.</li>
+<li><strong>Apply those insights to the West warehouse</strong>, where changes may be needed to improve results.</li>
+</ol>
+<p>These steps will help the company <mark>make more informed decisions</mark> and drive consistent growth across all locations.</p>
 </section>
 
 </main>

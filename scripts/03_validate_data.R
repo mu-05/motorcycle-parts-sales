@@ -1,5 +1,3 @@
-# Data validation
-
 # Check for duplicates
 sum(duplicated(sales))
 
@@ -12,7 +10,7 @@ unique(sales$client_type)
 unique(sales$product_line)
 unique(sales$payment)
 
-# Check range
+# Check range of values
 ggplot(sales, aes(x = quantity)) +
   geom_histogram(binwidth = 10) 
 

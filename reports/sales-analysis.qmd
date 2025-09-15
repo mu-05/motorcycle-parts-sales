@@ -13,18 +13,18 @@ execute:
   echo: true
 ---
 
-# Introduction
+# Business Problem
 
 AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their **sales data**.
 
-They operate **three warehouses**, and sell products to both individual customers (retail) and businesses (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.
+They operate **three warehouses**, and sell products to both **individual customers** (retail) and **businesses** (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.
 
 The company's leadership team wants :
 
 1.  A better understanding of <mark>how much revenue is generated from wholesale sales</mark>. 
 2.  An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.
 
-# Dataset
+# Dataset Overview
 
 To explore these questions, AliMoto provided access their database, specifically a table called `sales`, which contains **1,000 records and 10 fields** detailing various aspects of each transaction (date, price, client type), between June and August 2021.
 
@@ -67,7 +67,7 @@ dbWriteTable(
 ```
 
 ```{#code-get-10-random-rows .sql}
--- Get 10 random rows
+-- Get 10 random rows from the sales table
 SELECT *
   FROM sales
  ORDER BY RANDOM()
@@ -128,7 +128,7 @@ SELECT client_type,
 #| tbl-cap: "Net revenue and revenue share for each client type"
 #| echo: false
 
-# Calculate net revenue
+# Calculate net revenue an revenue share
 sales_summary <- sales %>% 
   group_by(client_type) %>%
   summarize(
@@ -273,8 +273,6 @@ monthly_sales_plot <- ggplot(sales_monthly_revenue, aes(x = month_chr, y = net_r
 monthly_sales_plot
 ```
 
-# Conclusion and Key Insights
-
 ```{r}
 #| label: code-disconnect
 #| echo: false
@@ -282,3 +280,21 @@ monthly_sales_plot
 # Close the connection
 dbDisconnect(con)
 ```
+
+# Key Findings and Recommendations
+
+This analysis provided a better understanding of AliMoto Supplies’ revenue, particularly from transactions with business customers. 
+
+Key findings include:
+
+* **Wholesale sales** account for **56% of total revenue**, making them a major source of income for the company.
+* **Revenue in the Central and North warehouses increased** significantly, by an average of **33%**, between July and August.
+* In contrast, the **West warehouse has experienced a steady decline in revenue**, by an average of **13%** per month since June.
+
+To support improvements in performance, I recommend the following:
+
+1. **Track monthly net revenue for each warehouse** to monitor trends and quickly respond to any changes.
+2. **Investigate the sales strategies used in the Central and North warehouses** to understand what's driving their success.
+3. **Apply those insights to the West warehouse**, where changes may be needed to improve results.
+
+These steps will help the company <mark>make more informed decisions</mark> and drive consistent growth across all locations.
