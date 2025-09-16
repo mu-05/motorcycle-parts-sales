@@ -1,6 +1,306 @@
 ---
 title: "Motorcycle Parts Sales"
+description: "This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance."
 author: "Murad M."
-format: html
+date: 2025-09-16
+format: 
+  html:
+    number-sections: true
+    theme: cosmo
+    df-print: paged
+    code-annotations: below
+    toc: false
+categories: [SQL, Data Analysis]
+draft: false
+lightbox: true
+execute: 
+  echo: true
 ---
 
+## Business Problem
+
+AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their **sales data**.
+
+They operate **three warehouses**, and sell products to both **individual customers** (retail) and **businesses** (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.
+
+The company's leadership team wants :
+
+1.  A better understanding of <mark>how much revenue is generated from wholesale sales</mark>. 
+2.  An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.
+
+## Dataset Overview
+
+To explore these questions, AliMoto provided access their database, specifically a table called `sales`[^1], which contains **1,000 records and 10 fields** detailing various aspects of each transaction (date, price, client type), between June and August 2021.
+
+[^1]: The dataset comes from a DataCamp project: *Analyzing Motorcycle Part Sales*. https://app.datacamp.com/learn/projects/1574
+
+I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The **dataset** is clean and **ready for analysis** (see @tbl-get-random-rows).
+
+```{r}
+#| label: code-load-data
+#| echo: false
+#| output: false
+
+# Load libraries
+library(DBI)
+library(RSQLite)
+library(readr)
+library(tidyverse)
+library(scales)
+
+# Set default theme for plots
+theme_set(theme_minimal(base_size = 14)) 
+
+# Create SQLite connection
+con <- dbConnect(
+  drv = RSQLite::SQLite(), 
+  dbname = ":memory:")
+
+# Load CSV
+# .. means move up one level
+sales <- read_csv("../data/sales.csv")
+
+# Convert date column from POSIXct to character 
+sales$date <- as.Date(x = sales$date)
+sales$date <- format(sales$date, "%Y-%m-%d")
+
+# Write the sales data frame to the database
+dbWriteTable(
+  conn = con,
+  name = "sales",
+  value = sales
+)
+```
+
+```{#code-get-10-random-rows .sql}
+-- Get 10 random rows from the sales table
+SELECT *
+  FROM sales
+ ORDER BY RANDOM()
+ LIMIT 10;
+```
+
+```{r}
+#| label: tbl-get-random-rows
+#| tbl-cap: "Example rows (randomly selected) from the sales data"
+#| echo: false
+
+# Get 10 random rows
+DBI::dbGetQuery(con, "SELECT * FROM sales ORDER BY RANDOM() LIMIT 10")
+```
+
+::: {.callout collapse="true"}
+
+#### Click to see the column details
+The following describes each field in the `sales` table, including its data type and a brief description of its meaning.
+
+| Column            | Data type    | Description                                                                |
+|-------------------|--------------|----------------------------------------------------------------------------|
+| `order_number`    | `TEXT`       | Unique order number.                                                       |
+| `date`            | `TEXT`       | Date of the order, from June to August 2021.                               | 
+| `warehouse`       | `TEXT`       | The warehouse that the order was made from: `North`, `Central`, or `West`. |
+| `client_type`     | `TEXT`       | Whether the order was `Retail` or `Wholesale`.                             |
+| `product_line`    | `TEXT`       | Type of product ordered.                                                   |
+| `quantity`        | `REAL`       | Number of products ordered.                                                |
+| `unit_price`      | `REAL`       | Price per product (US dollars).                                            |
+| `total`           | `REAL`       | Total price of the order (US dollars).                                     |
+| `payment`         | `TEXT`       | Payment method: `Credit card`, `Transfer`, or `Cash`.                      |
+| `payment_fee`     | `REAL`       | Percentage of `total` charged as a result of the `payment` method.         |
+: {.striped}
+:::
+
+## Wholesale Net Revenue
+
+<mark>How much revenue comes from business (wholesale) sales?</mark> To answer this first question, I wrote an SQL query using a `GROUP BY` clause, an aggregate function, and a subquery.
+
+The results (see @tbl-sales-summary) show that between June and August 2021, approximately **56%** of AliMoto Supplies' revenue came from sales to **business customers**, while the remaining 44% came from retail customers.
+
+```{#code-revenue-summary .sql}
+-- Calculate net revenue and revenue share for each client type
+SELECT client_type, 
+       SUM(total - ROUND(total * payment_fee, 2)) AS net_revenue,   -- <1>
+       SUM(total - ROUND(total * payment_fee, 2)) / (               -- <2>
+          SELECT SUM(total - ROUND(total * payment_fee, 2))         -- <2>
+            FROM sales                                              -- <2>
+          ) AS revenue_share                                        -- <2>
+  FROM sales 
+ GROUP BY client_type;
+```
+1.  Total revenue earned from each client type, after subtracting payment fees from each order.
+2.  The percentage of total net revenue that comes from each client type.
+
+```{r}
+#| label: tbl-sales-summary
+#| tbl-cap: "Net revenue and revenue share for each client type"
+#| echo: false
+
+# Calculate net revenue an revenue share
+sales_summary <- sales %>% 
+  group_by(client_type) %>%
+  summarize(
+    net_revenue = sum(total) - sum(total * payment_fee)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    revenue_share = net_revenue / sum(net_revenue)
+  )
+
+# Format the data
+sales_summary_formatted <- sales_summary %>%
+  mutate(
+    net_revenue = scales::dollar(net_revenue, accuracy = 1),
+    revenue_share = scales::percent(revenue_share, accuracy = 0.1)
+  )
+
+sales_summary_formatted
+```
+
+This **12 % difference** in revenue share, equivalent to **\$31,883**, is likely due to the larger order sizes placed by business customers (see @fig-avg-quantity). Because they work on multiple vehicles, businesses tend to purchase motorcycle parts in greater quantities, resulting in **higher total order values** compared to individual retail customers.
+
+```{r}
+#| label: fig-avg-quantity
+#| fig-cap: "Average quantity ordered by client type.<br> Business customers order, on average, five times more parts than retail customers."
+#| echo: false
+
+# Calculate summary statistics
+client_type_averages <- sales %>%
+  group_by(client_type) %>%
+  summarize(
+    mean_quantity = mean(quantity),
+    mean_total = mean(total)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    mean_quantity = round(mean_quantity)
+  )
+
+# Plot: average quantity ordered by client type
+avg_quantity_plot <- ggplot(client_type_averages, aes(x = client_type, y = mean_quantity)) +
+  geom_col() +
+  labs(
+    title = "Average Quantity Ordered by Client Type",
+    x = "Type of Client",
+    y = "Average Quantity Ordered"
+  )
+
+avg_quantity_plot
+```
+
+Having determined that **56%** of net revenue comes from **business customers**, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.
+
+## Monthly Revenue Growth Across Warhouses
+
+<mark>To analyze the evolution of wholesale revenue</mark>, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the **monthly net revenue by warehouse**, as shown in @tbl-monthly-revenue.
+
+```{#code-monthly-revenue-summary .sql}
+-- Step 1: Create a temporary table of wholesale sales
+-- Adds month information and calculates net total (after payment fee)
+WITH sales_wholesale_revenue AS(
+  SELECT warehouse,
+         date,
+         CAST(strftime('%m', date) AS INT) AS month_int,      -- <1>
+         CASE strftime('%m', date)                            -- <2>
+                WHEN '06' THEN 'June'                         -- <2>
+                WHEN '07' THEN 'July'                         -- <2>
+                WHEN '08' THEN 'August'                       -- <2>
+         END AS month_chr,                                    -- <2>
+         total,
+         payment_fee,
+         total - ROUND(total * payment_fee, 2) AS net_total   -- <3>
+    FROM sales
+   WHERE client_type = 'Wholesale'
+)
+
+-- Step 2: Summarize net revenue by warehouse and month
+SELECT warehouse,
+       month_chr,
+       SUM(net_total) AS net_revenue
+  FROM sales_wholesale_revenue
+ GROUP BY warehouse, month_int, month_chr
+ ORDER BY warehouse, month_int;
+```
+1. Extract the month number from the transaction date for chronological sorting.
+2. Derive the full month name from the month number for readability.
+3. Calculate each transaction's total after deducting payment fees.
+
+```{r}
+#| label: tbl-monthly-revenue
+#| tbl-cap: "Monthly net revenue by warehouse"
+#| echo: false
+#| message: FALSE
+
+# Calculate monthly revenue
+sales_monthly_revenue <- sales %>%
+  filter(client_type == "Wholesale") %>%
+  mutate(
+    month_int = month(x = date),
+    month_chr = month(x = date, label = TRUE, abbr = FALSE),
+    net_total = total - round(total * payment_fee, 2)
+    ) %>%
+  group_by(warehouse, month_int, month_chr) %>%
+  summarize(net_revenue = sum(net_total)) %>%
+  ungroup()
+
+# Format data
+sales_monthly_revenue_formatted <- sales_monthly_revenue %>%
+  select(-month_int) %>%
+  mutate(
+    net_revenue = scales::dollar(net_revenue, accuracy = 1), 
+    month_chr = as.character(month_chr)
+  )
+
+sales_monthly_revenue_formatted
+```
+
+To visualize trends more clearly, I created a **line plot** of monthly revenue by warehouse (see @fig-monthly-sales). This revealed three key insights:
+
+1.  **Higher Average Revenue in Central and North Warehouses**<br> From June to August, the Central and North warehouses generated significantly higher average monthly revenue (\$26,000 and \$19,200, respectively) compared to the West warehouse (\$7,500).
+2.  **Strong Growth in Central and North Warehouses**<br> Between July and August, net revenue in Central and North warehouses increased by an average of 33%.
+3.  **Decline in West Warehouse Performance**<br> In contrast, the West warehouse experienced a decline in net revenue, with an average decrease of 13% per month since June.
+
+These findings indicate that **overall net revenue growth from business customers is being held back by the underperformance of the West warehouse**. Improving operations or marketing efforts in this location may help boost total wholesale revenue moving forward.
+
+```{r}
+#| label: fig-monthly-sales
+#| fig-cap: "Net Revenue Trends Across Warehouses.<br> Central and North warehouses show strong growth, while West declines steadily."
+#| echo: false
+
+# Plot: monthly net revenue by warehouse
+monthly_sales_plot <- ggplot(sales_monthly_revenue, aes(x = month_chr, y = net_revenue, group = warehouse)) +
+  geom_line(aes(color = warehouse), linewidth = 2) +
+  labs(
+    title = "Net Revenue Trends Across Warehouses",
+    x = "Month",
+    y = "Net Revenue",
+    color = "Warehouse"
+  ) +
+  scale_y_continuous(label = scales::label_dollar()) 
+
+monthly_sales_plot
+```
+
+```{r}
+#| label: code-disconnect
+#| echo: false
+
+# Close the connection
+dbDisconnect(con)
+```
+
+## Key Findings and Recommendations
+
+This analysis provided a better understanding of AliMoto Supplies’ revenue, particularly from transactions with business customers. 
+
+Key findings include:
+
+* **Wholesale sales** account for **56% of total revenue**, making them a major source of income for the company.
+* **Revenue in the Central and North warehouses increased** significantly, by an average of **33%**, between July and August.
+* In contrast, the **West warehouse has experienced a steady decline in revenue**, by an average of **13%** per month since June.
+
+To support improvements in performance, I recommend the following:
+
+1. **Track monthly net revenue for each warehouse** to monitor trends and quickly respond to any changes.
+2. **Investigate the sales strategies used in the Central and North warehouses** to understand what's driving their success.
+3. **Apply those insights to the West warehouse**, where changes may be needed to improve results.
+
+These steps will help the company <mark>make more informed decisions</mark> and drive consistent growth across all locations.
