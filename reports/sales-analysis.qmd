@@ -1,7 +1,8 @@
 ---
 title: "Motorcycle Parts Sales"
+description: "This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance."
 author: "Murad M."
-lightbox: true
+date: 2025-09-16
 format: 
   html:
     number-sections: true
@@ -9,11 +10,14 @@ format:
     df-print: paged
     code-annotations: below
     toc: false
+categories: [SQL, Data Analysis]
+draft: false
+lightbox: true
 execute: 
   echo: true
 ---
 
-# Business Problem
+## Business Problem
 
 AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their **sales data**.
 
@@ -24,9 +28,11 @@ The company's leadership team wants :
 1.  A better understanding of <mark>how much revenue is generated from wholesale sales</mark>. 
 2.  An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.
 
-# Dataset Overview
+## Dataset Overview
 
-To explore these questions, AliMoto provided access their database, specifically a table called `sales`, which contains **1,000 records and 10 fields** detailing various aspects of each transaction (date, price, client type), between June and August 2021.
+To explore these questions, AliMoto provided access their database, specifically a table called `sales`[^1], which contains **1,000 records and 10 fields** detailing various aspects of each transaction (date, price, client type), between June and August 2021.
+
+[^1]: The dataset comes from a DataCamp project: *Analyzing Motorcycle Part Sales*. https://app.datacamp.com/learn/projects/1574
 
 I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The **dataset** is clean and **ready for analysis** (see @tbl-get-random-rows).
 
@@ -103,7 +109,7 @@ The following describes each field in the `sales` table, including its data type
 : {.striped}
 :::
 
-# Wholesale Net Revenue
+## Wholesale Net Revenue
 
 <mark>How much revenue comes from business (wholesale) sales?</mark> To answer this first question, I wrote an SQL query using a `GROUP BY` clause, an aggregate function, and a subquery.
 
@@ -182,7 +188,7 @@ avg_quantity_plot
 
 Having determined that **56%** of net revenue comes from **business customers**, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.
 
-# Monthly Revenue Growth Across Warhouses
+## Monthly Revenue Growth Across Warhouses
 
 <mark>To analyze the evolution of wholesale revenue</mark>, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the **monthly net revenue by warehouse**, as shown in @tbl-monthly-revenue.
 
@@ -281,7 +287,7 @@ monthly_sales_plot
 dbDisconnect(con)
 ```
 
-# Key Findings and Recommendations
+## Key Findings and Recommendations
 
 This analysis provided a better understanding of AliMoto Supplies’ revenue, particularly from transactions with business customers. 
 

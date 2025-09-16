@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Murad M.">
+<meta name="dcterms.date" content="2025-09-16">
+<meta name="description" content="This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance.">
 
 <title>Motorcycle Parts Sales</title>
 <style>
@@ -90,8 +92,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Motorcycle Parts Sales</h1>
-</div>
+  <div class="quarto-categories">
+    <div class="quarto-category">SQL</div>
+    <div class="quarto-category">Data Analysis</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -103,6 +114,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 16, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -112,8 +129,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="business-problem" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Business Problem</h1>
+<section id="business-problem" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="business-problem"><span class="header-section-number">1</span> Business Problem</h2>
 <p>AliMoto Supplies sells motorcycle parts, and they’ve have asked for some help in analyzing their <strong>sales data</strong>.</p>
 <p>They operate <strong>three warehouses</strong>, and sell products to both <strong>individual customers</strong> (retail) and <strong>businesses</strong> (wholesale). They accept credit cards, cash and bank transfer as payment methods. However, each payment type comes with a different fee.</p>
 <p>The company’s leadership team wants :</p>
@@ -122,9 +139,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>An analysis of <mark>how this revenue changes from month to month and across different warehouses</mark>.</li>
 </ol>
 </section>
-<section id="dataset-overview" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Dataset Overview</h1>
-<p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code>, which contains <strong>1,000 records and 10 fields</strong> detailing various aspects of each transaction (date, price, client type), between June and August 2021.</p>
+<section id="dataset-overview" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="dataset-overview"><span class="header-section-number">2</span> Dataset Overview</h2>
+<p>To explore these questions, AliMoto provided access their database, specifically a table called <code>sales</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, which contains <strong>1,000 records and 10 fields</strong> detailing various aspects of each transaction (date, price, client type), between June and August 2021.</p>
 <p>I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The <strong>dataset</strong> is clean and <strong>ready for analysis</strong> (see <a href="#tbl-get-random-rows" class="quarto-xref">Table&nbsp;1</a>).</p>
 <div class="sourceCode" id="code-get-10-random-rows"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="code-get-10-random-rows-1"><a href="#code-get-10-random-rows-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Get 10 random rows from the sales table</span></span>
 <span id="code-get-10-random-rows-2"><a href="#code-get-10-random-rows-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
@@ -141,7 +158,7 @@ Table&nbsp;1: Example rows (randomly selected) from the sales data
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"N169","2":"2021-07-16","3":"North","4":"Retail","5":"Miscellaneous","6":"3","7":"24.52","8":"73.55","9":"Credit card","10":"0.03"},{"1":"C137","2":"2021-06-27","3":"Central","4":"Retail","5":"Engine","6":"4","7":"66.03","8":"264.11","9":"Credit card","10":"0.03"},{"1":"C349","2":"2021-08-03","3":"Central","4":"Retail","5":"Braking system","6":"5","7":"15.70","8":"78.52","9":"Credit card","10":"0.03"},{"1":"N127","2":"2021-07-04","3":"North","4":"Retail","5":"Braking system","6":"10","7":"19.58","8":"195.75","9":"Cash","10":"0.00"},{"1":"C300","2":"2021-07-26","3":"Central","4":"Retail","5":"Frame & body","6":"1","7":"48.08","8":"48.08","9":"Cash","10":"0.00"},{"1":"N286","2":"2021-08-17","3":"North","4":"Retail","5":"Suspension & traction","6":"4","7":"28.88","8":"115.53","9":"Credit card","10":"0.03"},{"1":"N49","2":"2021-06-15","3":"North","4":"Retail","5":"Frame & body","6":"7","7":"36.52","8":"255.62","9":"Credit card","10":"0.03"},{"1":"W64","2":"2021-06-30","3":"West","4":"Retail","5":"Miscellaneous","6":"5","7":"29.50","8":"147.52","9":"Credit card","10":"0.03"},{"1":"C232","2":"2021-07-12","3":"Central","4":"Retail","5":"Suspension & traction","6":"3","7":"37.84","8":"113.52","9":"Cash","10":"0.00"},{"1":"W130","2":"2021-08-01","3":"West","4":"Retail","5":"Electrical system","6":"5","7":"25.32","8":"126.60","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"N35","2":"2021-06-11","3":"North","4":"Retail","5":"Braking system","6":"1","7":"23.28","8":"23.28","9":"Credit card","10":"0.03"},{"1":"N167","2":"2021-07-15","3":"North","4":"Retail","5":"Suspension & traction","6":"8","7":"41.59","8":"332.75","9":"Credit card","10":"0.03"},{"1":"N311","2":"2021-08-21","3":"North","4":"Wholesale","5":"Frame & body","6":"40","7":"35.92","8":"1436.67","9":"Transfer","10":"0.01"},{"1":"C175","2":"2021-07-04","3":"Central","4":"Wholesale","5":"Frame & body","6":"4","7":"45.66","8":"182.65","9":"Transfer","10":"0.01"},{"1":"C27","2":"2021-06-07","3":"Central","4":"Retail","5":"Braking system","6":"7","7":"16.33","8":"114.30","9":"Credit card","10":"0.03"},{"1":"C383","2":"2021-08-08","3":"Central","4":"Retail","5":"Miscellaneous","6":"7","7":"16.37","8":"114.59","9":"Credit card","10":"0.03"},{"1":"N303","2":"2021-08-20","3":"North","4":"Retail","5":"Electrical system","6":"1","7":"32.52","8":"32.52","9":"Credit card","10":"0.03"},{"1":"C316","2":"2021-07-29","3":"Central","4":"Retail","5":"Braking system","6":"10","7":"15.18","8":"151.82","9":"Credit card","10":"0.03"},{"1":"C229","2":"2021-07-11","3":"Central","4":"Retail","5":"Electrical system","6":"10","7":"29.69","8":"296.88","9":"Credit card","10":"0.03"},{"1":"C103","2":"2021-06-22","3":"Central","4":"Retail","5":"Engine","6":"5","7":"53.40","8":"266.98","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -232,8 +249,8 @@ Click to see the column details
 </div>
 </div>
 </section>
-<section id="wholesale-net-revenue" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Wholesale Net Revenue</h1>
+<section id="wholesale-net-revenue" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="wholesale-net-revenue"><span class="header-section-number">3</span> Wholesale Net Revenue</h2>
 <p><mark>How much revenue comes from business (wholesale) sales?</mark> To answer this first question, I wrote an SQL query using a <code>GROUP BY</code> clause, an aggregate function, and a subquery.</p>
 <p>The results (see <a href="#tbl-sales-summary" class="quarto-xref">Table&nbsp;2</a>) show that between June and August 2021, approximately <strong>56%</strong> of AliMoto Supplies’ revenue came from sales to <strong>business customers</strong>, while the remaining 44% came from retail customers.</p>
 <div class="sourceCode" id="code-revenue-summary"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="code-revenue-summary-1"><a href="#code-revenue-summary-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Calculate net revenue and revenue share for each client type</span></span>
@@ -290,8 +307,8 @@ Figure&nbsp;1: Average quantity ordered by client type.<br> Business customers o
 </div>
 <p>Having determined that <strong>56%</strong> of net revenue comes from <strong>business customers</strong>, the next step is to explore how this wholesale revenue evolves month-to-month and across different warehouse locations.</p>
 </section>
-<section id="monthly-revenue-growth-across-warhouses" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Monthly Revenue Growth Across Warhouses</h1>
+<section id="monthly-revenue-growth-across-warhouses" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="monthly-revenue-growth-across-warhouses"><span class="header-section-number">4</span> Monthly Revenue Growth Across Warhouses</h2>
 <p><mark>To analyze the evolution of wholesale revenue</mark>, I began by writing an SQL query to prepare the data. This involved filtering for wholesale transactions, extracting the month from the transaction date, and calculating the net total per transaction. I then aggregated this dataset to calculate the <strong>monthly net revenue by warehouse</strong>, as shown in <a href="#tbl-monthly-revenue" class="quarto-xref">Table&nbsp;3</a>.</p>
 <div class="sourceCode" id="code-monthly-revenue-summary"><pre class="sourceCode sql code-annotation-code code-with-copy code-annotated"><code class="sourceCode sql"><span id="code-monthly-revenue-summary-1"><a href="#code-monthly-revenue-summary-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Step 1: Create a temporary table of wholesale sales</span></span>
 <span id="code-monthly-revenue-summary-2"><a href="#code-monthly-revenue-summary-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Adds month information and calculates net total (after payment fee)</span></span>
@@ -372,8 +389,8 @@ Figure&nbsp;2: Net Revenue Trends Across Warehouses.<br> Central and North wareh
 </div>
 </div>
 </section>
-<section id="key-findings-and-recommendations" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Key Findings and Recommendations</h1>
+<section id="key-findings-and-recommendations" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="key-findings-and-recommendations"><span class="header-section-number">5</span> Key Findings and Recommendations</h2>
 <p>This analysis provided a better understanding of AliMoto Supplies’ revenue, particularly from transactions with business customers.</p>
 <p>Key findings include:</p>
 <ul>
@@ -390,7 +407,13 @@ Figure&nbsp;2: Net Revenue Trends Across Warehouses.<br> Central and North wareh
 <p>These steps will help the company <mark>make more informed decisions</mark> and drive consistent growth across all locations.</p>
 </section>
 
-</main>
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The dataset comes from a DataCamp project: <em>Analyzing Motorcycle Part Sales</em>. https://app.datacamp.com/learn/projects/1574<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
