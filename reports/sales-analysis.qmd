@@ -250,7 +250,7 @@ To visualize trends more clearly, I created a **line plot** of monthly revenue b
 
 1.  **Higher Average Revenue in Central and North Warehouses**<br> From June to August, the Central and North warehouses generated significantly higher average monthly revenue (\$26,000 and \$19,200, respectively) compared to the West warehouse (\$7,500).
 2.  **Strong Growth in Central and North Warehouses**<br> Between July and August, net revenue in Central and North warehouses increased by an average of 33%.
-3.  **Decline in West Warehouse Performance**<br> In contrast, the West warehouse experienced a decline in net revenue, with an average decrease of 13% over the same period.
+3.  **Decline in West Warehouse Performance**<br> In contrast, the West warehouse experienced a decline in net revenue, with an average decrease of 13% per month since June.
 
 These findings indicate that **overall net revenue growth from business customers is being held back by the underperformance of the West warehouse**. Improving operations or marketing efforts in this location may help boost total wholesale revenue moving forward.
 
