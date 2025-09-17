@@ -1,7 +1,7 @@
 # Load packages
-library(tidyverse)
 library(DBI)
 library(RSQLite)
+library(tidyverse)
 library(scales)
 
 # Set default theme for plots

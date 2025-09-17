@@ -1,5 +1,5 @@
 ---
-title: "Motorcycle Parts Sales"
+title: "Explore Motorcycle Parts Sales"
 description: "This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance."
 author: "Murad M."
 date: 2025-09-16
@@ -58,7 +58,6 @@ I checked the data for common issues like incorrect values, missing information,
 # Load libraries
 library(DBI)
 library(RSQLite)
-library(readr)
 library(tidyverse)
 library(scales)
 

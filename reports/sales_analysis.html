@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2025-09-16">
 <meta name="description" content="This project explores sales data from a motorcycle parts reseller to reveal insights into revenue patterns and sales performance.">
 
-<title>Motorcycle Parts Sales</title>
+<title>Explore Motorcycle Parts Sales</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,23 +61,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="sales-analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="sales-analysis_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="sales-analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="sales-analysis_files/libs/quarto-html/popper.min.js"></script>
-<script src="sales-analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="sales-analysis_files/libs/quarto-html/anchor.min.js"></script>
-<link href="sales-analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="sales-analysis_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="sales-analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="sales-analysis_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="sales-analysis_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
-<link href="sales-analysis_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="sales_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="sales_analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="sales_analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="sales_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="sales_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="sales_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="sales_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="sales_analysis_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="sales_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="sales_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="sales_analysis_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="sales_analysis_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="sales_analysis_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="sales_analysis_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<link href="sales_analysis_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 
-<script src="sales-analysis_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="sales_analysis_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
 
@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Motorcycle Parts Sales</h1>
+<h1 class="title">Explore Motorcycle Parts Sales</h1>
   <div class="quarto-categories">
     <div class="quarto-category">SQL</div>
     <div class="quarto-category">Data Analysis</div>
@@ -164,7 +164,7 @@ Table&nbsp;1: Example rows (randomly selected) from the sales data
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"C242","2":"2021-07-14","3":"Central","4":"Retail","5":"Braking system","6":"5","7":"13.26","8":"66.30","9":"Credit card","10":"0.03"},{"1":"N124","2":"2021-07-03","3":"North","4":"Wholesale","5":"Frame & body","6":"32","7":"41.92","8":"1341.44","9":"Transfer","10":"0.01"},{"1":"C480","2":"2021-08-28","3":"Central","4":"Retail","5":"Electrical system","6":"9","7":"32.87","8":"295.83","9":"Credit card","10":"0.03"},{"1":"N166","2":"2021-07-15","3":"North","4":"Retail","5":"Frame & body","6":"3","7":"40.78","8":"122.32","9":"Credit card","10":"0.03"},{"1":"N62","2":"2021-06-18","3":"North","4":"Retail","5":"Suspension & traction","6":"5","7":"29.38","8":"146.93","9":"Credit card","10":"0.03"},{"1":"W20","2":"2021-06-10","3":"West","4":"Wholesale","5":"Miscellaneous","6":"36","7":"21.75","8":"782.94","9":"Transfer","10":"0.01"},{"1":"N196","2":"2021-07-24","3":"North","4":"Retail","5":"Miscellaneous","6":"4","7":"25.58","8":"102.31","9":"Credit card","10":"0.03"},{"1":"W51","2":"2021-06-26","3":"West","4":"Retail","5":"Braking system","6":"1","7":"19.16","8":"19.16","9":"Credit card","10":"0.03"},{"1":"N67","2":"2021-06-19","3":"North","4":"Retail","5":"Miscellaneous","6":"8","7":"18.98","8":"151.84","9":"Credit card","10":"0.03"},{"1":"N288","2":"2021-08-17","3":"North","4":"Retail","5":"Suspension & traction","6":"5","7":"30.45","8":"152.26","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["order_number"],"name":[1],"type":["chr"],"align":["left"]},{"label":["date"],"name":[2],"type":["chr"],"align":["left"]},{"label":["warehouse"],"name":[3],"type":["chr"],"align":["left"]},{"label":["client_type"],"name":[4],"type":["chr"],"align":["left"]},{"label":["product_line"],"name":[5],"type":["chr"],"align":["left"]},{"label":["quantity"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["unit_price"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["payment"],"name":[9],"type":["chr"],"align":["left"]},{"label":["payment_fee"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"C135","2":"2021-06-27","3":"Central","4":"Wholesale","5":"Braking system","6":"36","7":"17.34","8":"624.42","9":"Transfer","10":"0.01"},{"1":"N274","2":"2021-08-13","3":"North","4":"Retail","5":"Engine","6":"2","7":"66.10","8":"132.19","9":"Credit card","10":"0.03"},{"1":"C88","2":"2021-06-17","3":"Central","4":"Wholesale","5":"Suspension & traction","6":"4","7":"39.45","8":"157.81","9":"Transfer","10":"0.01"},{"1":"C422","2":"2021-08-13","3":"Central","4":"Retail","5":"Suspension & traction","6":"2","7":"30.53","8":"61.07","9":"Credit card","10":"0.03"},{"1":"W10","2":"2021-06-07","3":"West","4":"Retail","5":"Miscellaneous","6":"3","7":"17.87","8":"53.61","9":"Cash","10":"0.00"},{"1":"N111","2":"2021-06-29","3":"North","4":"Retail","5":"Frame & body","6":"4","7":"37.00","8":"148.01","9":"Credit card","10":"0.03"},{"1":"C339","2":"2021-08-01","3":"Central","4":"Wholesale","5":"Braking system","6":"40","7":"20.51","8":"820.33","9":"Transfer","10":"0.01"},{"1":"W12","2":"2021-06-08","3":"West","4":"Retail","5":"Braking system","6":"9","7":"13.62","8":"122.60","9":"Credit card","10":"0.03"},{"1":"C395","2":"2021-08-10","3":"Central","4":"Retail","5":"Electrical system","6":"4","7":"23.58","8":"94.33","9":"Credit card","10":"0.03"},{"1":"N49","2":"2021-06-15","3":"North","4":"Retail","5":"Frame & body","6":"7","7":"36.52","8":"255.62","9":"Credit card","10":"0.03"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -302,7 +302,7 @@ Table&nbsp;2: Net revenue and revenue share for each client type
 <div id="fig-avg-quantity" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Average quantity ordered by client type.  Business customers order, on average, five times more parts than retail customers."><img src="sales-analysis_files/figure-html/fig-avg-quantity-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="sales_analysis_files/figure-html/fig-avg-quantity-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Average quantity ordered by client type.  Business customers order, on average, five times more parts than retail customers."><img src="sales_analysis_files/figure-html/fig-avg-quantity-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-avg-quantity-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Average quantity ordered by client type.<br> Business customers order, on average, five times more parts than retail customers.
@@ -385,7 +385,7 @@ Table&nbsp;3: Monthly net revenue by warehouse
 <div id="fig-monthly-sales" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Net Revenue Trends Across Warehouses.  Central and North warehouses show strong growth, while West declines steadily."><img src="sales-analysis_files/figure-html/fig-monthly-sales-1.png" class="img-fluid figure-img" width="672"></a>
+<a href="sales_analysis_files/figure-html/fig-monthly-sales-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Net Revenue Trends Across Warehouses.  Central and North warehouses show strong growth, while West declines steadily."><img src="sales_analysis_files/figure-html/fig-monthly-sales-1.png" class="img-fluid figure-img" width="672"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-monthly-sales-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Net Revenue Trends Across Warehouses.<br> Central and North warehouses show strong growth, while West declines steadily.
