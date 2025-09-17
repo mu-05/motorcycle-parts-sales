@@ -17,6 +17,20 @@ execute:
   echo: true
 ---
 
+<!-- View on GitHub badge -->
+:::: {style="text-align: left;"}
+<a href="https://github.com/mu-05/motorcycle-parts-sales" 
+   target="_blank" 
+   rel="noopener noreferrer" 
+   title="Open GitHub repository in a new tab">
+
+  <img src="https://img.shields.io/badge/View%20on-GitHub-24292e?logo=github&style=flat" 
+       alt="View on GitHub"
+       style="height: 23px;">
+       
+</a>
+:::
+
 ## Business Problem
 
 AliMoto Supplies sells motorcycle parts, and they've have asked for some help in analyzing their **sales data**.
