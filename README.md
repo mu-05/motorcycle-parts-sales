@@ -7,6 +7,9 @@ The analysis was performed using **SQL** and **R**, using an in-memory SQLite da
 The final report is available online at:
 - https://mu-05.github.io/posts/2025-09-15-motorcycle-parts-sales/
 
+## Data Source
+The dataset used in this project was downloaded on 2025-09-16 from a DataCamp lesson titled [Analyzing Motorcycle Part Sales](https://app.datacamp.com/learn/projects/1574).
+
 ## Objectives
 - Analyze sales performance by **region** and **warehouse**
 - Identify which **client types** generate the most revenue
