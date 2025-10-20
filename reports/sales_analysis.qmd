@@ -18,7 +18,7 @@ execute:
 ---
 
 <!-- View on GitHub badge -->
-:::: {style="text-align: left;"}
+::: {style="text-align: left;"}
 <a href="https://github.com/mu-05/motorcycle-parts-sales" 
    target="_blank" 
    rel="noopener noreferrer" 
@@ -27,7 +27,6 @@ execute:
   <img src="https://img.shields.io/badge/View%20on-GitHub-24292e?logo=github&style=flat" 
        alt="View on GitHub"
        style="height: 23px;">
-       
 </a>
 :::
 
@@ -46,7 +45,7 @@ The company's leadership team wants :
 
 To explore these questions, AliMoto provided access their database, specifically a table called `sales`[^1], which contains **1,000 records and 10 fields** detailing various aspects of each transaction (date, price, client type), between June and August 2021.
 
-[^1]: The dataset comes from a DataCamp project: *Analyzing Motorcycle Part Sales*. https://app.datacamp.com/learn/projects/1574
+[^1]: The dataset comes from a DataCamp project: [Analyzing Motorcycle Part Sales](https://app.datacamp.com/learn/projects/1574).
 
 I checked the data for common issues like incorrect values, missing information, or duplicate entries. No data quality issues or duplicates were identified. The **dataset** is clean and **ready for analysis** (see @tbl-get-random-rows).
 
